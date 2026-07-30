@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Danish's Logos Apps</title>
+<meta name="description" content="Logos Basecamp apps for the Logos Execution Zone public testnet. Add one repository URL and install LEZ Faucet and ETH &#8596; LEZ Atomic Swaps from the App Manager.">
+<meta name="color-scheme" content="dark">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://logos.substratestudios.xyz/">
+
+<!-- favicon: two plates, in the page's own palette. inline data URI, no binary file. -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23191A1C'/%3E%3Crect x='5' y='6' width='22' height='8' fill='%238C9096'/%3E%3Crect x='5' y='18' width='22' height='8' fill='%236E9A98'/%3E%3C/svg%3E">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Danish's Logos Apps">
+<meta property="og:title" content="Danish's Logos Apps">
+<meta property="og:description" content="Logos Basecamp apps for the LEZ public testnet. One repository URL, added to Logos Basecamp once.">
+<meta property="og:url" content="https://logos.substratestudios.xyz/">
+<!-- no og:image: no social card image exists yet, so none is claimed -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Danish's Logos Apps">
+<meta name="twitter:description" content="Logos Basecamp apps for the LEZ public testnet. One repository URL, added to Logos Basecamp once.">
+<style>
+  :root{
+    --bg:#131416;
+    --surface:#191A1C;
+    --line:#26282B;
+    --text:#E6E7E9;
+    --secondary:#8C9096;   /* 5.74:1 on --bg */
+    --muted:#5C6066;
+    --accent:#6E9A98;      /* 5.91:1 on --bg — link text only */
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  }
+
+  *{box-sizing:border-box}
+
+  html{-webkit-text-size-adjust:100%}
+
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font:400 15px/1.6 var(--sans);
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{max-width:1080px;margin:0 auto;padding:0 32px}
+
+  a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
+  a:hover{border-bottom-color:var(--accent)}
+
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  h1,h2,h3{margin:0;font-weight:600;letter-spacing:-0.01em}
+
+  .mono{font-family:var(--mono);font-variant-ligatures:none}
+
+  .kicker{
+    margin:0;
+    font-size:10px;
+    font-weight:500;
+    line-height:1.4;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--secondary);
+  }
+  /* Sits directly above the first plate, whose own border-top would otherwise
+     read as this heading's underline. Push it clear of that rule. */
+  .sectionhead{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px 12px;
+    align-items:baseline;
+    padding-top:44px;
+  }
+  .sectionhead .count{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:0;
+    text-transform:none;
+    color:var(--muted);
+  }
+
+  /* ---------- 1. top bar ---------- */
+  .topbar{border-bottom:1px solid var(--line)}
+  .topbar .wrap{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    min-height:52px;
+  }
+  .brand{font-size:13px;font-weight:500;color:var(--text);letter-spacing:.005em}
+  .topbar a{font-size:13px}
+
+  /* ---------- 2. hero ---------- */
+  .hero{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:44px;
+    align-items:start;
+    padding-top:88px;
+    padding-bottom:96px;   /* block only — .wrap owns the inline padding */
+  }
+  .hero > *{min-width:0}   /* let the URL box shrink inside its track */
+  .hero h1{margin:18px 0 0;font-size:30px;line-height:1.2}
+  .lede{margin:14px 0 0;max-width:46ch;color:var(--secondary);font-size:15px}
+
+  .urlbox{
+    display:flex;
+    align-items:stretch;
+    gap:0;
+    margin-top:34px;
+    border:1px solid var(--line);
+    background:var(--surface);
+    max-width:100%;
+    min-width:0;
+  }
+  .urlbox code{
+    flex:1 1 auto;
+    min-width:0;
+    padding:15px 13px;
+    font-family:var(--mono);
+    font-size:16px;
+    line-height:1.4;
+    color:var(--text);
+    /* wrap rather than clip: the URL is the primary action, never hide it */
+    overflow-wrap:anywhere;
+    word-break:break-word;
+  }
+  .copy{
+    flex:0 0 auto;
+    margin:0;
+    padding:0 13px;
+    border:0;
+    border-left:1px solid var(--line);
+    border-radius:0;
+    background:transparent;
+    color:var(--secondary);
+    font:500 11.5px/1 var(--sans);
+    letter-spacing:.09em;
+    text-transform:uppercase;
+    cursor:pointer;
+    min-width:78px;      /* holds width when the label swaps to Copied */
+  }
+  .copy:hover{color:var(--text)}
+
+  .crumb{margin:14px 0 0;font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+
+  .qr-slot{justify-self:end}
+  .qr-frame{border:1px solid var(--line);padding:9px;background:#fff;line-height:0;width:max-content}
+  .qr-frame svg{display:block;width:130px;height:130px}
+  .qr-cap{margin:10px 0 0;font-size:11.5px;color:var(--muted)}
+
+  /* ---------- 3. plates ---------- */
+  .plate{
+    display:grid;
+    grid-template-columns:45fr 55fr;   /* fr, not %, so the gap is accounted for */
+    gap:48px;
+    padding:48px 0 84px;
+    border-top:1px solid var(--line);
+  }
+  .plate + .plate{margin-top:12px}
+  .plate > *{min-width:0}
+
+  .shot img{
+    display:block;
+    width:100%;
+    height:auto;
+    max-width:100%;
+    /* both plates share one 4:3 frame so they read as siblings. the PNGs are
+       already cropped to exactly 4:3, so cover/position never actually cut
+       anything — they are the guard against a future asset of another ratio. */
+    aspect-ratio:4/3;
+    object-fit:cover;
+    object-position:center top;
+    border:1px solid var(--line);
+    background:var(--surface);
+  }
+  .shot figcaption{margin:10px 0 0;font-size:11.5px;color:var(--muted)}
+  .shot{margin:0}
+
+  .meta{min-width:0}
+  .name{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+  .name h2{font-size:20px;line-height:1.3}
+  .ver{font-family:var(--mono);font-size:13px;color:var(--secondary)}
+  .ident{margin:8px 0 0;font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+  .desc{margin:18px 0 0;max-width:56ch;color:var(--secondary)}
+
+  .rows{margin:26px 0 0;display:grid;grid-template-columns:78px 1fr;gap:14px 18px;align-items:baseline}
+  .rows dt{margin:0}
+  .rows dd{margin:0;display:flex;flex-wrap:wrap;gap:8px 8px;align-items:baseline}
+  .chip{
+    display:inline-block;
+    padding:4px 9px;
+    border:1px solid var(--line);
+    background:transparent;
+    font-family:var(--mono);
+    font-size:12px;
+    line-height:1.35;
+    color:var(--secondary);
+  }
+  .chip .role{color:var(--muted)}
+  .plainval{font-size:13px;color:var(--secondary)}
+
+  .status{margin:26px 0 0;font-size:12.5px;color:var(--secondary)}
+  .status .mono{font-size:12px}
+  .source{margin:14px 0 0;font-size:13.5px}
+
+  .poc{
+    margin-left:2px;
+    padding:4px 9px;
+    border:1px solid var(--line);
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.06em;
+    text-transform:lowercase;
+    color:var(--muted);
+    white-space:nowrap;
+  }
+
+  /* ---------- 4. requirements + footer ---------- */
+  .reqs{border-top:1px solid var(--line);padding-top:44px;padding-bottom:8px}
+  .reqgrid{
+    margin:26px 0 0;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:26px 40px;
+  }
+  .req{margin:0}
+  .req b{display:block;font-weight:500;color:var(--secondary);font-size:13.5px}
+  .req > span{display:block;margin-top:5px;font-size:13px;color:var(--secondary)}
+  .req .mono{display:inline;font-size:12.5px;color:var(--muted)}
+
+  .pagefoot{border-top:1px solid var(--line);margin-top:52px;padding:26px 0 72px}
+  .pagefoot .wrap{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px 28px;
+    align-items:baseline;
+    justify-content:space-between;
+  }
+  .pagefoot p{margin:0;font-size:12.5px;color:var(--muted)}
+  .pagefoot .links{display:flex;gap:20px;flex-wrap:wrap;font-size:12.5px}
+  /* Own row, not a third column: this is a caveat about index freshness and it has
+     to be readable rather than tucked into the tally line. */
+  .pagefoot .note{
+    flex:1 0 100%;
+    order:3;
+    max-width:62ch;
+    margin-top:4px;
+    line-height:1.6;
+    color:var(--secondary);
+  }
+
+  .sr{
+    position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+    overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;
+  }
+
+  /* ---------- responsive ---------- */
+  @media (max-width:900px){
+    .plate{grid-template-columns:1fr;gap:32px;padding-bottom:64px}
+    .reqgrid{grid-template-columns:repeat(2,1fr)}
+    .shot img{max-width:560px}
+  }
+  @media (max-width:720px){
+    .wrap{padding:0 20px}
+    .hero{grid-template-columns:1fr;gap:40px;padding-top:56px;padding-bottom:64px}
+    .qr-slot{justify-self:start}
+    .hero h1{font-size:26px}
+    .urlbox{flex-direction:column;align-items:stretch}
+    .urlbox code{font-size:15px}
+    .copy{
+      border-left:0;
+      border-top:1px solid var(--line);
+      padding:12px 16px;
+      text-align:left;
+      min-width:0;
+    }
+    .rows{grid-template-columns:1fr;gap:6px}
+    .rows dd{margin-bottom:8px}
+    .reqgrid{grid-template-columns:1fr}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important;animation:none!important;scroll-behavior:auto!important}
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <span class="brand">Danish's Logos Apps</span>
+    <a href="https://github.com/logos-co/logos-basecamp">Download Basecamp</a>
+  </div>
+</header>
+
+<main>
+
+  <!-- 2. hero -->
+  <section class="wrap hero" aria-labelledby="page-title">
+    <div>
+      <p class="kicker">Install as a repository</p>
+      <h1 id="page-title">One URL. Many apps.</h1>
+      <p class="lede">Logos Basecamp apps for the Logos Execution Zone public testnet. Paste the repository URL once, then install from the App&nbsp;Manager &mdash; and get everything added here later without pasting it again.</p>
+
+      <div class="urlbox">
+        <code id="repo-url">https://logos.substratestudios.xyz/logos-repo.json</code>
+        <button type="button" class="copy" id="copy-btn" data-label="Copy">Copy</button>
+      </div>
+      <p class="sr" id="copy-status" role="status" aria-live="polite"></p>
+
+      <p class="crumb">Basecamp &rarr; Settings &rarr; Repositories &rarr; Add repository</p>
+    </div>
+
+    <div class="qr-slot">
+      <div class="qr-frame">
+        <svg class="qr" viewBox="0 0 37 37" width="130" height="130" role="img" aria-label="QR code linking to https://logos.substratestudios.xyz/" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg"><rect width="37" height="37" fill="#fff"/><g fill="#000" transform="translate(4 4)"><rect x="0" y="0" width="7" height="1"/><rect x="9" y="0" width="2" height="1"/><rect x="12" y="0" width="1" height="1"/><rect x="15" y="0" width="2" height="1"/><rect x="18" y="0" width="3" height="1"/><rect x="22" y="0" width="7" height="1"/><rect x="0" y="1" width="1" height="1"/><rect x="6" y="1" width="1" height="1"/><rect x="22" y="1" width="1" height="1"/><rect x="28" y="1" width="1" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="2" y="2" width="3" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="8" y="2" width="1" height="1"/><rect x="12" y="2" width="1" height="1"/><rect x="14" y="2" width="1" height="1"/><rect x="16" y="2" width="1" height="1"/><rect x="20" y="2" width="1" height="1"/><rect x="22" y="2" width="1" height="1"/><rect x="24" y="2" width="3" height="1"/><rect x="28" y="2" width="1" height="1"/><rect x="0" y="3" width="1" height="1"/><rect x="2" y="3" width="3" height="1"/><rect x="6" y="3" width="1" height="1"/><rect x="8" y="3" width="2" height="1"/><rect x="11" y="3" width="2" height="1"/><rect x="17" y="3" width="1" height="1"/><rect x="20" y="3" width="1" height="1"/><rect x="22" y="3" width="1" height="1"/><rect x="24" y="3" width="3" height="1"/><rect x="28" y="3" width="1" height="1"/><rect x="0" y="4" width="1" height="1"/><rect x="2" y="4" width="3" height="1"/><rect x="6" y="4" width="1" height="1"/><rect x="8" y="4" width="4" height="1"/><rect x="13" y="4" width="3" height="1"/><rect x="19" y="4" width="2" height="1"/><rect x="22" y="4" width="1" height="1"/><rect x="24" y="4" width="3" height="1"/><rect x="28" y="4" width="1" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="6" y="5" width="1" height="1"/><rect x="8" y="5" width="2" height="1"/><rect x="11" y="5" width="8" height="1"/><rect x="20" y="5" width="1" height="1"/><rect x="22" y="5" width="1" height="1"/><rect x="28" y="5" width="1" height="1"/><rect x="0" y="6" width="7" height="1"/><rect x="8" y="6" width="1" height="1"/><rect x="10" y="6" width="1" height="1"/><rect x="12" y="6" width="1" height="1"/><rect x="14" y="6" width="1" height="1"/><rect x="16" y="6" width="1" height="1"/><rect x="18" y="6" width="1" height="1"/><rect x="20" y="6" width="1" height="1"/><rect x="22" y="6" width="7" height="1"/><rect x="8" y="7" width="1" height="1"/><rect x="13" y="7" width="1" height="1"/><rect x="16" y="7" width="1" height="1"/><rect x="0" y="8" width="1" height="1"/><rect x="2" y="8" width="5" height="1"/><rect x="11" y="8" width="1" height="1"/><rect x="14" y="8" width="1" height="1"/><rect x="17" y="8" width="1" height="1"/><rect x="22" y="8" width="5" height="1"/><rect x="0" y="9" width="6" height="1"/><rect x="7" y="9" width="2" height="1"/><rect x="11" y="9" width="1" height="1"/><rect x="19" y="9" width="2" height="1"/><rect x="22" y="9" width="3" height="1"/><rect x="28" y="9" width="1" height="1"/><rect x="0" y="10" width="3" height="1"/><rect x="5" y="10" width="7" height="1"/><rect x="15" y="10" width="1" height="1"/><rect x="21" y="10" width="1" height="1"/><rect x="23" y="10" width="1" height="1"/><rect x="0" y="11" width="1" height="1"/><rect x="2" y="11" width="2" height="1"/><rect x="8" y="11" width="1" height="1"/><rect x="12" y="11" width="1" height="1"/><rect x="14" y="11" width="1" height="1"/><rect x="18" y="11" width="2" height="1"/><rect x="22" y="11" width="2" height="1"/><rect x="25" y="11" width="1" height="1"/><rect x="27" y="11" width="1" height="1"/><rect x="0" y="12" width="1" height="1"/><rect x="2" y="12" width="2" height="1"/><rect x="6" y="12" width="2" height="1"/><rect x="9" y="12" width="1" height="1"/><rect x="16" y="12" width="2" height="1"/><rect x="20" y="12" width="2" height="1"/><rect x="25" y="12" width="2" height="1"/><rect x="0" y="13" width="4" height="1"/><rect x="5" y="13" width="1" height="1"/><rect x="7" y="13" width="1" height="1"/><rect x="12" y="13" width="3" height="1"/><rect x="16" y="13" width="1" height="1"/><rect x="19" y="13" width="6" height="1"/><rect x="28" y="13" width="1" height="1"/><rect x="0" y="14" width="1" height="1"/><rect x="5" y="14" width="4" height="1"/><rect x="10" y="14" width="2" height="1"/><rect x="13" y="14" width="4" height="1"/><rect x="22" y="14" width="2" height="1"/><rect x="25" y="14" width="2" height="1"/><rect x="2" y="15" width="1" height="1"/><rect x="4" y="15" width="1" height="1"/><rect x="7" y="15" width="2" height="1"/><rect x="11" y="15" width="1" height="1"/><rect x="13" y="15" width="1" height="1"/><rect x="15" y="15" width="1" height="1"/><rect x="20" y="15" width="5" height="1"/><rect x="27" y="15" width="1" height="1"/><rect x="0" y="16" width="1" height="1"/><rect x="3" y="16" width="1" height="1"/><rect x="6" y="16" width="1" height="1"/><rect x="8" y="16" width="1" height="1"/><rect x="12" y="16" width="1" height="1"/><rect x="14" y="16" width="1" height="1"/><rect x="16" y="16" width="2" height="1"/><rect x="20" y="16" width="1" height="1"/><rect x="25" y="16" width="2" height="1"/><rect x="0" y="17" width="1" height="1"/><rect x="3" y="17" width="3" height="1"/><rect x="8" y="17" width="1" height="1"/><rect x="10" y="17" width="1" height="1"/><rect x="12" y="17" width="1" height="1"/><rect x="16" y="17" width="1" height="1"/><rect x="18" y="17" width="3" height="1"/><rect x="22" y="17" width="3" height="1"/><rect x="26" y="17" width="1" height="1"/><rect x="28" y="17" width="1" height="1"/><rect x="0" y="18" width="1" height="1"/><rect x="2" y="18" width="1" height="1"/><rect x="5" y="18" width="2" height="1"/><rect x="8" y="18" width="2" height="1"/><rect x="15" y="18" width="1" height="1"/><rect x="20" y="18" width="2" height="1"/><rect x="23" y="18" width="1" height="1"/><rect x="26" y="18" width="1" height="1"/><rect x="0" y="19" width="1" height="1"/><rect x="2" y="19" width="1" height="1"/><rect x="9" y="19" width="1" height="1"/><rect x="12" y="19" width="1" height="1"/><rect x="14" y="19" width="2" height="1"/><rect x="18" y="19" width="2" height="1"/><rect x="22" y="19" width="2" height="1"/><rect x="27" y="19" width="1" height="1"/><rect x="0" y="20" width="1" height="1"/><rect x="3" y="20" width="5" height="1"/><rect x="9" y="20" width="1" height="1"/><rect x="16" y="20" width="2" height="1"/><rect x="20" y="20" width="5" height="1"/><rect x="26" y="20" width="3" height="1"/><rect x="8" y="21" width="1" height="1"/><rect x="12" y="21" width="3" height="1"/><rect x="16" y="21" width="5" height="1"/><rect x="24" y="21" width="5" height="1"/><rect x="0" y="22" width="7" height="1"/><rect x="9" y="22" width="3" height="1"/><rect x="13" y="22" width="3" height="1"/><rect x="18" y="22" width="3" height="1"/><rect x="22" y="22" width="1" height="1"/><rect x="24" y="22" width="3" height="1"/><rect x="0" y="23" width="1" height="1"/><rect x="6" y="23" width="1" height="1"/><rect x="8" y="23" width="1" height="1"/><rect x="10" y="23" width="4" height="1"/><rect x="16" y="23" width="1" height="1"/><rect x="19" y="23" width="2" height="1"/><rect x="24" y="23" width="1" height="1"/><rect x="28" y="23" width="1" height="1"/><rect x="0" y="24" width="1" height="1"/><rect x="2" y="24" width="3" height="1"/><rect x="6" y="24" width="1" height="1"/><rect x="8" y="24" width="1" height="1"/><rect x="14" y="24" width="1" height="1"/><rect x="17" y="24" width="1" height="1"/><rect x="20" y="24" width="5" height="1"/><rect x="26" y="24" width="2" height="1"/><rect x="0" y="25" width="1" height="1"/><rect x="2" y="25" width="3" height="1"/><rect x="6" y="25" width="1" height="1"/><rect x="8" y="25" width="4" height="1"/><rect x="13" y="25" width="1" height="1"/><rect x="17" y="25" width="2" height="1"/><rect x="20" y="25" width="1" height="1"/><rect x="25" y="25" width="4" height="1"/><rect x="0" y="26" width="1" height="1"/><rect x="2" y="26" width="3" height="1"/><rect x="6" y="26" width="1" height="1"/><rect x="8" y="26" width="1" height="1"/><rect x="11" y="26" width="3" height="1"/><rect x="15" y="26" width="3" height="1"/><rect x="22" y="26" width="6" height="1"/><rect x="0" y="27" width="1" height="1"/><rect x="6" y="27" width="1" height="1"/><rect x="13" y="27" width="2" height="1"/><rect x="20" y="27" width="1" height="1"/><rect x="24" y="27" width="2" height="1"/><rect x="27" y="27" width="1" height="1"/><rect x="0" y="28" width="7" height="1"/><rect x="8" y="28" width="1" height="1"/><rect x="11" y="28" width="2" height="1"/><rect x="14" y="28" width="4" height="1"/><rect x="19" y="28" width="1" height="1"/><rect x="23" y="28" width="1" height="1"/><rect x="26" y="28" width="1" height="1"/></g></svg>
+      </div>
+      <p class="qr-cap">scan for this page</p>
+    </div>
+  </section>
+
+  <!-- 3. the plates -->
+  <section class="wrap" aria-labelledby="apps-title">
+
+    <!-- "Many apps" is the promise of the repository URL, not a claim about today's
+         count. Name the count here so the two plates below read as the current
+         contents rather than as the whole story. -->
+    <h2 class="kicker sectionhead" id="apps-title">
+      In here today <span class="count">2 apps &middot; 4 modules</span>
+    </h2>
+
+    <article class="plate">
+      <figure class="shot">
+        <img src="assets/lez-faucet.png" width="1120" height="840" decoding="async"
+             alt="LEZ Faucet: a single Public LEZ address field, a Request 150 LEZ button, and a receipt reading 150 LEZ credited with balance 6000 LEZ before and 6150 LEZ after, plus the transaction hash.">
+      </figure>
+      <div class="meta">
+        <div class="name">
+          <h2>LEZ Faucet</h2>
+          <span class="ver">0.2.0</span>
+        </div>
+        <p class="ident">lez_faucet &middot; blockchain</p>
+        <p class="desc">Request one fixed 150 LEZ testnet drop for a public LEZ account you already own. The faucet holds no account, asks for no secret, and stores nothing.</p>
+
+        <dl class="rows">
+          <dt class="kicker">Bundles</dt>
+          <dd>
+            <span class="chip">lez_faucet <span class="role">(core)</span></span>
+            <span class="chip">lez_faucet_ui <span class="role">(ui_qml)</span></span>
+          </dd>
+          <dt class="kicker">Uses</dt>
+          <dd>
+            <span class="chip">no Basecamp services</span>
+            <span class="plainval">&mdash; talks the LEZ sequencer directly</span>
+          </dd>
+        </dl>
+
+        <p class="status"><span class="mono">0.2.0</span> is what this catalogue installs &middot; <span class="mono">0.3.0</span> is built but not yet released</p>
+        <p class="source"><a href="https://github.com/logos-co/lez-faucet">View on GitHub</a></p>
+      </div>
+    </article>
+
+    <article class="plate">
+      <figure class="shot">
+        <img src="assets/atomic-swaps.png" width="1120" height="840" decoding="async"
+             alt="ETH to LEZ Atomic Swaps on the Maker tab: a Publish Offer button above the four-step swap sequence — generate preimage, lock LEZ, wait for ETH lock, claim ETH.">
+        <figcaption>legacy UI</figcaption>
+      </figure>
+      <div class="meta">
+        <div class="name">
+          <h2>ETH &#8596; LEZ Atomic Swaps</h2>
+          <span class="ver">0.2.0</span>
+          <span class="poc">proof of concept</span>
+        </div>
+        <p class="ident">swap &middot; defi</p>
+        <p class="desc">Cross-chain atomic swap between LEZ and Ethereum using hash time-locked contracts (HTLCs).</p>
+
+        <dl class="rows">
+          <dt class="kicker">Bundles</dt>
+          <dd>
+            <span class="chip">swap <span class="role">(core)</span></span>
+            <span class="chip">swap_ui <span class="role">(ui_qml)</span></span>
+          </dd>
+          <dt class="kicker">Uses</dt>
+          <dd>
+            <span class="chip">Basecamp Messaging</span>
+            <span class="chip">delivery_module</span>
+            <span class="plainval">&mdash; resolved from the official Logos repository</span>
+          </dd>
+        </dl>
+
+        <p class="status">Released 2026-07-23. Not for production.</p>
+        <p class="source"><a href="https://github.com/logos-co/eth-lez-atomic-swaps">View on GitHub</a></p>
+      </div>
+    </article>
+
+  </section>
+
+  <!-- 4. requirements -->
+  <section class="wrap reqs" aria-labelledby="reqs-title">
+    <h2 class="kicker" id="reqs-title">Requirements</h2>
+    <div class="reqgrid">
+      <p class="req"><b>macOS on Apple Silicon only.</b><span>The only published build variant is <span class="mono">darwin-arm64</span>. There are no Linux or Windows packages.</span></p>
+      <p class="req"><b>Requires Logos Basecamp 0.2.1.</b></p>
+      <p class="req"><b>Public testnet only.</b><span>No mainnet value moves through either app.</span></p>
+      <p class="req"><b>Packages are unsigned.</b><span><span class="mono">trustedSigners</span> is empty, so Basecamp verifies the download against the index root hash but cannot verify a publisher.</span></p>
+      <p class="req"><b>Install the core module before its UI module.</b><span>Basecamp resolves dependencies, but a UI module installed first will not load.</span></p>
+      <p class="req"><b>Keep the default repository enabled.</b><span>The swap needs <span class="mono">delivery_module</span>, which this catalogue does not carry. Basecamp ships the official Logos repository enabled and resolves it from there.</span></p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="pagefoot">
+  <div class="wrap">
+    <p>2 apps &middot; 4 modules &middot; 6 published versions &middot; descriptor schema v1, index schema v2 &middot; MIT OR Apache-2.0</p>
+    <p class="note">This index is assembled by hand from both app repositories' own releases and
+      republished when either one ships. It is not rebuilt on a schedule, so a brand-new
+      upstream release can lag here.</p>
+    <span class="links">
+      <a href="https://github.com/logos-co/lez-faucet">lez-faucet</a>
+      <a href="https://github.com/logos-co/eth-lez-atomic-swaps">eth-lez-atomic-swaps</a>
+    </span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var btn = document.getElementById('copy-btn');
+  var live = document.getElementById('copy-status');
+  var src = document.getElementById('repo-url');
+  if (!btn || !src) return;
+  var timer = null;
+
+  function fallback(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.setAttribute('aria-hidden', 'true');
+    ta.style.position = 'fixed';
+    ta.style.top = '-1000px';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    var ok = false;
+    try {
+      ta.select();
+      ta.setSelectionRange(0, text.length);
+      ok = document.execCommand('copy');
+    } catch (e) {
+      ok = false;
+    }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  function done(ok) {
+    if (!ok) {
+      if (live) live.textContent = 'Copy failed — select the URL and copy it manually.';
+      return;
+    }
+    btn.textContent = 'Copied';
+    if (live) live.textContent = 'Repository URL copied to the clipboard.';
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(function () {
+      btn.textContent = btn.getAttribute('data-label') || 'Copy';
+      if (live) live.textContent = '';
+    }, 1500);
+  }
+
+  btn.addEventListener('click', function () {
+    var text = (src.textContent || '').trim();
+    // navigator.clipboard is undefined on plain http origins and old engines.
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () {
+        done(true);
+      }, function () {
+        done(fallback(text));
+      });
+    } else {
+      done(fallback(text));
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

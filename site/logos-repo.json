@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "name": "logos-lez-apps",
+  "displayName": "Danish's Logos Apps",
+  "description": "Logos Basecamp apps for the LEZ public testnet — currently the LEZ faucet and the ETH ↔ LEZ atomic swap, with more as they ship. macOS Apple Silicon only.",
+  "homepage": "https://logos.substratestudios.xyz/",
+  "indexUrl": "https://logos.substratestudios.xyz/index.json",
+  "trustedSigners": []
+}

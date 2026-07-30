@@ -1,0 +1,206 @@
+{
+  "schemaVersion": 2,
+  "repositoryName": "logos-lez-apps",
+  "generatedAt": "2026-07-30T07:30:52Z",
+  "packages": [
+    {
+      "name": "lez_faucet",
+      "versions": [
+        {
+          "url": "https://github.com/logos-co/lez-faucet/releases/download/lez_faucet-v0.2.0/lez_faucet-0.2.0.lgx",
+          "rootHash": "5aef748166d4e37a4480e1fd2d42109e38753ccee20cd38a09a7117f9eb81e6a",
+          "manifest": {
+            "author": "Logos",
+            "category": "blockchain",
+            "dependencies": [],
+            "description": "Create and fund a disposable LEZ testnet account, or fund an existing initialized public account without importing its key.",
+            "display_name": "LEZ Faucet",
+            "hashes": {
+              "root": "5aef748166d4e37a4480e1fd2d42109e38753ccee20cd38a09a7117f9eb81e6a",
+              "variants": "340fd39acac81c75b767d06dd18c9b859d4370ee86a15a0ba817865da7b86be5",
+              "variants/darwin-arm64": "5c6572403b2f9ddb6a10643f5c952a49e95377636c3d5cb18f1b16c198cc165f"
+            },
+            "icon": "",
+            "main": {
+              "darwin-arm64": "lez_faucet_plugin.dylib"
+            },
+            "manifestVersion": "0.3.0",
+            "name": "lez_faucet",
+            "type": "core",
+            "version": "0.2.0"
+          },
+          "releasedAt": "2026-07-23T19:01:45Z",
+          "publisherRef": "lez_faucet-v0.2.0",
+          "size": 9134466,
+          "sha256": "2e6da4542926c985f87449ad74d2aeb5a9de2fc35951784c2649a6277063cfbd"
+        },
+        {
+          "url": "https://github.com/logos-co/lez-faucet/releases/download/lez_faucet-v0.1.0/lez_faucet-0.1.0.lgx",
+          "rootHash": "34d751cc7f97cd45cc46407371d74ff374caf5f66ae593d6da1b454ac11cedcc",
+          "manifest": {
+            "author": "Logos",
+            "category": "blockchain",
+            "dependencies": [],
+            "description": "Create, initialize, and fund a public LEZ testnet account.",
+            "display_name": "LEZ Faucet",
+            "hashes": {
+              "root": "34d751cc7f97cd45cc46407371d74ff374caf5f66ae593d6da1b454ac11cedcc",
+              "variants": "b7479c1b97a8466732e7e010de410de2d39686c681b8cb9969bcbedb9677cfad",
+              "variants/darwin-arm64": "2e393358817eb30cf0d38d0d6b96a1bd128c074e71216257924256aa46cc1632"
+            },
+            "icon": "",
+            "main": {
+              "darwin-arm64": "lez_faucet_plugin.dylib"
+            },
+            "manifestVersion": "0.3.0",
+            "name": "lez_faucet",
+            "type": "core",
+            "version": "0.1.0"
+          },
+          "releasedAt": "2026-07-23T00:13:48Z",
+          "publisherRef": "lez_faucet-v0.1.0",
+          "size": 9130190,
+          "sha256": "87e1728d1fe89ec5c933cf6c3e634c539e838d9a55310c8f74444445891582f9"
+        }
+      ]
+    },
+    {
+      "name": "lez_faucet_ui",
+      "versions": [
+        {
+          "url": "https://github.com/logos-co/lez-faucet/releases/download/lez_faucet_ui-v0.2.0/lez_faucet_ui-0.2.0.lgx",
+          "rootHash": "49c1cdb4ca902ca21ae3e2ef5f88f9ce66e64fd0a1127666ff8af5c31177dea0",
+          "manifest": {
+            "author": "Logos",
+            "category": "blockchain",
+            "dependencies": [
+              "lez_faucet"
+            ],
+            "description": "Create and fund a disposable LEZ testnet account, or fund an existing initialized public account without importing its key.",
+            "display_name": "LEZ Faucet",
+            "hashes": {
+              "root": "49c1cdb4ca902ca21ae3e2ef5f88f9ce66e64fd0a1127666ff8af5c31177dea0",
+              "variants": "def48e353f31dc8b3014aac3bb59e87163ea035c43cedcbaf1ffee366543b43f",
+              "variants/darwin-arm64": "6544668df3eb240020927b481783907ebd1deacc6ad656fcb63659e97738c3ea"
+            },
+            "icon": "",
+            "main": {
+              "darwin-arm64": "lez_faucet_ui_plugin.dylib"
+            },
+            "manifestVersion": "0.3.0",
+            "name": "lez_faucet_ui",
+            "type": "ui_qml",
+            "version": "0.2.0",
+            "view": "qml/FaucetView.qml"
+          },
+          "releasedAt": "2026-07-23T19:02:38Z",
+          "publisherRef": "lez_faucet_ui-v0.2.0",
+          "size": 3418115,
+          "sha256": "a2c5308bc5d69d2c83632d82371070fff423d84b62836c0d0a08b938c224670d"
+        },
+        {
+          "url": "https://github.com/logos-co/lez-faucet/releases/download/lez_faucet_ui-v0.1.0/lez_faucet_ui-0.1.0.lgx",
+          "rootHash": "387a4dda366702033b151f8750c9817a4f2d97c46d17d918b1d57b4db9d75388",
+          "manifest": {
+            "author": "Logos",
+            "category": "blockchain",
+            "dependencies": [
+              "lez_faucet"
+            ],
+            "description": "Create and fund one public LEZ testnet account from Basecamp",
+            "display_name": "LEZ Faucet",
+            "hashes": {
+              "root": "387a4dda366702033b151f8750c9817a4f2d97c46d17d918b1d57b4db9d75388",
+              "variants": "34228720f802f80e36d14fd1f99327039952b48b0b05391228e16ff30d86f720",
+              "variants/darwin-arm64": "bb13363c1571a101bec1710b83ae9af1ed0e84ba0861c7acb1fc51de2896d0ed"
+            },
+            "icon": "",
+            "main": {
+              "darwin-arm64": "lez_faucet_ui_plugin.dylib"
+            },
+            "manifestVersion": "0.3.0",
+            "name": "lez_faucet_ui",
+            "type": "ui_qml",
+            "version": "0.1.0",
+            "view": "qml/FaucetView.qml"
+          },
+          "releasedAt": "2026-07-23T00:14:18Z",
+          "publisherRef": "lez_faucet_ui-v0.1.0",
+          "size": 3407642,
+          "sha256": "f4e5894e88ac00ee45db6d0cb33e1a2520a26611ebca0aec2575bb6e3a226710"
+        }
+      ]
+    },
+    {
+      "name": "swap",
+      "versions": [
+        {
+          "url": "https://github.com/logos-co/eth-lez-atomic-swaps/releases/download/swap-v0.2.0/swap-0.2.0.lgx",
+          "rootHash": "4e5a10de1d3673ce79211e14b7c0043f603904528956d71b86139473a62eb94f",
+          "manifest": {
+            "author": "Logos",
+            "category": "defi",
+            "dependencies": [
+              "delivery_module"
+            ],
+            "description": "LEZ <> ETH atomic swap backend (wraps the swap-ffi Rust orchestrator)",
+            "hashes": {
+              "root": "4e5a10de1d3673ce79211e14b7c0043f603904528956d71b86139473a62eb94f",
+              "variants": "262a3bf60dcc4ccc3de5e2b0e4364653bd5816f8b365c73445f5c1ad12864bf8",
+              "variants/darwin-arm64": "b02a705ea59546626db370f1c32086d5b90da7e54055973242b05749d131e5d8"
+            },
+            "icon": "",
+            "main": {
+              "darwin-arm64": "swap_plugin.dylib"
+            },
+            "manifestVersion": "0.2.0",
+            "name": "swap",
+            "type": "core",
+            "version": "0.2.0",
+            "display_name": "ETH ↔ LEZ Atomic Swap"
+          },
+          "releasedAt": "2026-07-22T21:07:16Z",
+          "publisherRef": "swap-v0.2.0",
+          "size": 10449756,
+          "sha256": "c460c228b52a62e680a1c22f223cf95631a32ed487258a1fc29574e5a4091a7a"
+        }
+      ]
+    },
+    {
+      "name": "swap_ui",
+      "versions": [
+        {
+          "url": "https://github.com/logos-co/eth-lez-atomic-swaps/releases/download/swap_ui-v0.2.0/swap_ui-0.2.0.lgx",
+          "rootHash": "c97e10cb7edc6bed4859ea146cb69a871ad85954eaf0394291691eb14da0ad65",
+          "manifest": {
+            "author": "Logos",
+            "category": "defi",
+            "dependencies": [
+              "swap"
+            ],
+            "description": "LEZ <> ETH atomic swap UI (Basecamp)",
+            "hashes": {
+              "root": "c97e10cb7edc6bed4859ea146cb69a871ad85954eaf0394291691eb14da0ad65",
+              "variants": "5111cf66c9c84bbc8528f259545088e54356fdf37043027337494871e45e3a09",
+              "variants/darwin-arm64": "e40f136db1fa95695e2aae36ad7e8128c474e9ddf4690975d5b0b4dbdbb450e0"
+            },
+            "icon": "",
+            "main": {
+              "darwin-arm64": "swap_ui_plugin.dylib"
+            },
+            "manifestVersion": "0.3.0",
+            "name": "swap_ui",
+            "type": "ui_qml",
+            "version": "0.2.0",
+            "view": "qml/Main.qml",
+            "display_name": "ETH ↔ LEZ Atomic Swap"
+          },
+          "releasedAt": "2026-07-22T21:07:22Z",
+          "publisherRef": "swap_ui-v0.2.0",
+          "size": 3503802,
+          "sha256": "6378221e6f800160750e9c0cd0d14e7d0f50fda4460a122774012a7244d07abb"
+        }
+      ]
+    }
+  ]
+}
