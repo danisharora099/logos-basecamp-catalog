@@ -223,16 +223,20 @@
 
   /* ---------- 4. requirements + footer ---------- */
   .reqs{border-top:1px solid var(--line);padding-top:44px;padding-bottom:8px}
-  .reqgrid{
-    margin:26px 0 0;
+  /* One labelled line per constraint, the same shape as the .rows list inside a
+     plate. Six short rows scan in a couple of seconds; six paragraphs did not. */
+  .reqlist{
+    margin:24px 0 0;
     display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:26px 40px;
+    grid-template-columns:118px minmax(0,1fr);
+    gap:13px 22px;
+    align-items:baseline;
   }
-  .req{margin:0}
-  .req b{display:block;font-weight:500;color:var(--secondary);font-size:13.5px}
-  .req > span{display:block;margin-top:5px;font-size:13px;color:var(--secondary)}
-  .req .mono{display:inline;font-size:12.5px;color:var(--muted)}
+  .reqlist dt{margin:0}
+  .reqlist dd{margin:0;max-width:66ch;font-size:13.5px;color:var(--secondary)}
+  .reqlist dd b{font-weight:500;color:var(--text)}
+  .reqlist .mono{font-size:12.5px;color:var(--muted)}
+  .reqlist dd b.mono{font-size:13px;color:var(--text)}
 
   .pagefoot{border-top:1px solid var(--line);margin-top:52px;padding:26px 0 72px}
   .pagefoot .wrap{
@@ -263,7 +267,6 @@
   /* ---------- responsive ---------- */
   @media (max-width:900px){
     .plate{grid-template-columns:1fr;gap:32px;padding-bottom:64px}
-    .reqgrid{grid-template-columns:repeat(2,1fr)}
     .shot img{max-width:560px}
   }
   @media (max-width:720px){
@@ -282,7 +285,8 @@
     }
     .rows{grid-template-columns:1fr;gap:6px}
     .rows dd{margin-bottom:8px}
-    .reqgrid{grid-template-columns:1fr}
+    .reqlist{grid-template-columns:1fr;gap:4px}
+    .reqlist dd{margin-bottom:10px}
   }
 
   @media (prefers-reduced-motion:reduce){
@@ -405,14 +409,25 @@
   <!-- 4. requirements -->
   <section class="wrap reqs" aria-labelledby="reqs-title">
     <h2 class="kicker" id="reqs-title">Requirements</h2>
-    <div class="reqgrid">
-      <p class="req"><b>macOS on Apple Silicon, or Linux.</b><span>0.3.x publishes <span class="mono">darwin-arm64</span>, <span class="mono">linux-amd64</span>, and <span class="mono">linux-arm64</span>; earlier versions are <span class="mono">darwin-arm64</span> only. The Linux packages are built and their payloads verified, but none has yet been installed or launched under Basecamp. There are no Windows packages.</span></p>
-      <p class="req"><b>Requires Logos Basecamp 0.2.1.</b></p>
-      <p class="req"><b>Public testnet only.</b><span>No mainnet value moves through either app.</span></p>
-      <p class="req"><b>Packages are unsigned.</b><span><span class="mono">trustedSigners</span> is empty, so Basecamp verifies the download against the index root hash but cannot verify a publisher.</span></p>
-      <p class="req"><b>Install the core module before its UI module.</b><span>Basecamp resolves dependencies, but a UI module installed first will not load.</span></p>
-      <p class="req"><b>Keep the default repository enabled.</b><span>The swap needs <span class="mono">delivery_module</span>, which this catalogue does not carry. Basecamp ships the official Logos repository enabled and resolves it from there.</span></p>
-    </div>
+    <dl class="reqlist">
+      <dt class="kicker">Basecamp</dt>
+      <dd><b class="mono">0.2.1</b></dd>
+
+      <dt class="kicker">Platform</dt>
+      <dd><b>macOS on Apple Silicon.</b> 0.3.x also ships <span class="mono">linux-amd64</span> and <span class="mono">linux-arm64</span> payloads &mdash; verified present, but never installed or launched under Basecamp. 0.2.0 and earlier are <span class="mono">darwin-arm64</span> only. No Windows.</dd>
+
+      <dt class="kicker">Network</dt>
+      <dd><b>Public testnet only</b> &mdash; no mainnet value moves through either app.</dd>
+
+      <dt class="kicker">Signing</dt>
+      <dd><b>Unsigned</b> &mdash; Basecamp checks the bytes against the index root hash, not the publisher.</dd>
+
+      <dt class="kicker">Install order</dt>
+      <dd><b>Core module before its UI module</b> &mdash; a UI module installed first will not load.</dd>
+
+      <dt class="kicker">Repositories</dt>
+      <dd><b>Keep the default repository enabled</b> &mdash; the swap's <span class="mono">delivery_module</span> dependency resolves from the official Logos repository, not from here.</dd>
+    </dl>
   </section>
 
 </main>
@@ -421,8 +436,8 @@
   <div class="wrap">
     <p>2 apps &middot; 4 modules &middot; 11 published versions &middot; descriptor schema v1, index schema v2 &middot; MIT OR Apache-2.0</p>
     <p class="note">This index is assembled by hand from both app repositories' own releases and
-      republished when either one ships. It is not rebuilt on a schedule, so a brand-new
-      upstream release can lag here.</p>
+      republished when either one ships &mdash; never on a schedule, so a brand-new upstream
+      release can lag here.</p>
     <span class="links">
       <a href="https://github.com/logos-co/lez-faucet">lez-faucet</a>
       <a href="https://github.com/logos-co/eth-lez-atomic-swaps">eth-lez-atomic-swaps</a>
