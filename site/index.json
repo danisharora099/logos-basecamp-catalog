@@ -1,11 +1,43 @@
 {
   "schemaVersion": 2,
   "repositoryName": "logos-lez-apps",
-  "generatedAt": "2026-07-30T07:30:52Z",
+  "generatedAt": "2026-08-03T10:45:52Z",
   "packages": [
     {
       "name": "lez_faucet",
       "versions": [
+        {
+          "url": "https://github.com/logos-co/lez-faucet/releases/download/lez_faucet-v0.3.0/lez_faucet-0.3.0.lgx",
+          "rootHash": "7fec43b0e7cce4470e7d28a46d1a8a5319f6124229888502ea2095abba6c66ed",
+          "manifest": {
+            "author": "Logos",
+            "category": "blockchain",
+            "dependencies": [],
+            "description": "Request one fixed 150 LEZ testnet drop for a public account you already own. Stateless: no wallet, no key material, no stored files.",
+            "display_name": "LEZ Faucet",
+            "hashes": {
+              "root": "7fec43b0e7cce4470e7d28a46d1a8a5319f6124229888502ea2095abba6c66ed",
+              "variants": "765a961c53e662bfeb41af1a3bf8fd1a90ea1aa6abd655d88da39a76c60fb74a",
+              "variants/darwin-arm64": "1f26d708ac2637642d530bb372f2353dbf941219f32a4a3d04fc67c2706df555",
+              "variants/linux-amd64": "7714dda0e037d17f19452c30700c95c7f66ed0535df561ec728636767f747d51",
+              "variants/linux-arm64": "25682ce316440a17b7b3402be04eef4e00e5a8ff651315a44d238a4c6a1bf986"
+            },
+            "icon": "",
+            "main": {
+              "darwin-arm64": "lez_faucet_plugin.dylib",
+              "linux-amd64": "lez_faucet_plugin.so",
+              "linux-arm64": "lez_faucet_plugin.so"
+            },
+            "manifestVersion": "0.3.0",
+            "name": "lez_faucet",
+            "type": "core",
+            "version": "0.3.0"
+          },
+          "releasedAt": "2026-08-03T09:41:52Z",
+          "publisherRef": "lez_faucet-v0.3.0",
+          "size": 19406015,
+          "sha256": "4dccdfe21f2f47a818903b57a5d25797521e7d24c656f76b76d6c095456bd62d"
+        },
         {
           "url": "https://github.com/logos-co/lez-faucet/releases/download/lez_faucet-v0.2.0/lez_faucet-0.2.0.lgx",
           "rootHash": "5aef748166d4e37a4480e1fd2d42109e38753ccee20cd38a09a7117f9eb81e6a",
@@ -67,6 +99,41 @@
     {
       "name": "lez_faucet_ui",
       "versions": [
+        {
+          "url": "https://github.com/logos-co/lez-faucet/releases/download/lez_faucet_ui-v0.3.0/lez_faucet_ui-0.3.0.lgx",
+          "rootHash": "4dd07ac97c564559038f09290eedde55256b1d9d0f41554639143e12eead758d",
+          "manifest": {
+            "author": "Logos",
+            "category": "blockchain",
+            "dependencies": [
+              "lez_faucet"
+            ],
+            "description": "Request 150 testnet LEZ for a public LEZ account you already own. The faucet holds no account, asks for no secret, and stores nothing.",
+            "display_name": "LEZ Faucet",
+            "hashes": {
+              "root": "4dd07ac97c564559038f09290eedde55256b1d9d0f41554639143e12eead758d",
+              "variants": "c755340b84d4d4aed3ef569104e60577e5ed9e7b20fc9cbecdc9c9f884c071a7",
+              "variants/darwin-arm64": "fc46fbb1820cfde70749a080f9e729113d32c72b14b049f465c4b4371d96aa82",
+              "variants/linux-amd64": "a5d79ea1620888204e19e13475ceb9879d70b77a24144cb97bf0d9c1a9d205d5",
+              "variants/linux-arm64": "f3c81fa6e6bbbcc43175217e0a417f32c3a07c9a6ba35508f5c70ee6c1de2880"
+            },
+            "icon": "",
+            "main": {
+              "darwin-arm64": "lez_faucet_ui_plugin.dylib",
+              "linux-amd64": "lez_faucet_ui_plugin.so",
+              "linux-arm64": "lez_faucet_ui_plugin.so"
+            },
+            "manifestVersion": "0.3.0",
+            "name": "lez_faucet_ui",
+            "type": "ui_qml",
+            "version": "0.3.0",
+            "view": "qml/FaucetView.qml"
+          },
+          "releasedAt": "2026-08-03T09:48:40Z",
+          "publisherRef": "lez_faucet_ui-v0.3.0",
+          "size": 11464565,
+          "sha256": "ed654740ef0a882c711ed3119ca310786c348bf5daa1faceff1fe59c93fbe69f"
+        },
         {
           "url": "https://github.com/logos-co/lez-faucet/releases/download/lez_faucet_ui-v0.2.0/lez_faucet_ui-0.2.0.lgx",
           "rootHash": "49c1cdb4ca902ca21ae3e2ef5f88f9ce66e64fd0a1127666ff8af5c31177dea0",
@@ -135,6 +202,40 @@
       "name": "swap",
       "versions": [
         {
+          "url": "https://github.com/logos-co/eth-lez-atomic-swaps/releases/download/swap-v0.3.0/swap-0.3.0.lgx",
+          "rootHash": "e30c835df7a7d591a4443c83c3821867b9c95fc3cec695ec8259992c5f23ef4d",
+          "manifest": {
+            "author": "Logos",
+            "category": "defi",
+            "dependencies": [
+              "delivery_module"
+            ],
+            "description": "LEZ <> ETH atomic swap backend (wraps the swap-ffi Rust orchestrator)",
+            "hashes": {
+              "root": "e30c835df7a7d591a4443c83c3821867b9c95fc3cec695ec8259992c5f23ef4d",
+              "variants": "2b15d189549d78dba974a47a96ef56ae9cca938663bbfd31ce38d6c744fa930a",
+              "variants/darwin-arm64": "afa7129fe310b88d93d967f6c982081b83a12dc0cb6adee5bd23a8e1c0c181f0",
+              "variants/linux-amd64": "cee34de70eb89e0e5cb1162d8aa9d818bb42867dfb77d57f92acbc704f365733",
+              "variants/linux-arm64": "d6f9ca8d61fe85d1617cf9de91754df75712537e23c8d29cf97c968c1ebbc6cd"
+            },
+            "icon": "",
+            "main": {
+              "darwin-arm64": "swap_plugin.dylib",
+              "linux-amd64": "swap_plugin.so",
+              "linux-arm64": "swap_plugin.so"
+            },
+            "manifestVersion": "0.2.0",
+            "name": "swap",
+            "type": "core",
+            "version": "0.3.0",
+            "display_name": "ETH ↔ LEZ Atomic Swap"
+          },
+          "releasedAt": "2026-08-03T10:04:16Z",
+          "publisherRef": "swap-v0.3.0",
+          "size": 33216112,
+          "sha256": "5159b0c36a381b8bd5e9e15e580da50a84e357d3c379621ba50ed66034a6fd62"
+        },
+        {
           "url": "https://github.com/logos-co/eth-lez-atomic-swaps/releases/download/swap-v0.2.0/swap-0.2.0.lgx",
           "rootHash": "4e5a10de1d3673ce79211e14b7c0043f603904528956d71b86139473a62eb94f",
           "manifest": {
@@ -169,6 +270,41 @@
     {
       "name": "swap_ui",
       "versions": [
+        {
+          "url": "https://github.com/logos-co/eth-lez-atomic-swaps/releases/download/swap_ui-v0.3.0/swap_ui-0.3.0.lgx",
+          "rootHash": "921c0c19235abea885f6d8598e0e9f1d2fac3157fbd95d518a34a85c3505512e",
+          "manifest": {
+            "author": "Logos",
+            "category": "defi",
+            "dependencies": [
+              "swap"
+            ],
+            "description": "LEZ <> ETH atomic swap UI (Basecamp)",
+            "display_name": "ETH ↔ LEZ Atomic Swap",
+            "hashes": {
+              "root": "921c0c19235abea885f6d8598e0e9f1d2fac3157fbd95d518a34a85c3505512e",
+              "variants": "249d400020fad05c5a9c911ccab59a0ea95fd50870a1b15d8d203225b54797b4",
+              "variants/darwin-arm64": "fcbc993835b29748039fcaf917c2b725484fd243cb29ce7b682f62fb02258b04",
+              "variants/linux-amd64": "d96bfbbff56b05e862016ab596e36c33c8d744412a5314fac73ea630cc889fab",
+              "variants/linux-arm64": "5f2cc44c90ac260c1d9d7416e8a816b05d4771973389853a95637fd56599e18a"
+            },
+            "icon": "",
+            "main": {
+              "darwin-arm64": "swap_ui_plugin.dylib",
+              "linux-amd64": "swap_ui_plugin.so",
+              "linux-arm64": "swap_ui_plugin.so"
+            },
+            "manifestVersion": "0.3.0",
+            "name": "swap_ui",
+            "type": "ui_qml",
+            "version": "0.3.0",
+            "view": "qml/Main.qml"
+          },
+          "releasedAt": "2026-08-03T10:32:21Z",
+          "publisherRef": "swap_ui-v0.3.0",
+          "size": 11909828,
+          "sha256": "7716c2bcf4803b138cdb5212cef02552b98a3592dba9511663486b8d02478912"
+        },
         {
           "url": "https://github.com/logos-co/eth-lez-atomic-swaps/releases/download/swap_ui-v0.2.0/swap_ui-0.2.0.lgx",
           "rootHash": "c97e10cb7edc6bed4859ea146cb69a871ad85954eaf0394291691eb14da0ad65",

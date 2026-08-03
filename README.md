@@ -18,11 +18,12 @@ repositories and every `.lgx` is downloaded from there.
 
 | App | Modules | Version | Source repo |
 | --- | --- | --- | --- |
-| LEZ Faucet | `lez_faucet` (core), `lez_faucet_ui` (ui_qml) | 0.2.0, 0.1.0 | [`logos-co/lez-faucet`](https://github.com/logos-co/lez-faucet) |
-| ETH ↔ LEZ Atomic Swaps | `swap` (core), `swap_ui` (ui_qml) | 0.2.0 | [`logos-co/eth-lez-atomic-swaps`](https://github.com/logos-co/eth-lez-atomic-swaps) |
+| LEZ Faucet | `lez_faucet` (core), `lez_faucet_ui` (ui_qml) | 0.3.0, 0.2.0, 0.1.0 | [`logos-co/lez-faucet`](https://github.com/logos-co/lez-faucet) |
+| ETH ↔ LEZ Atomic Swaps | `swap` (core), `swap_ui` (ui_qml) | 0.3.0, 0.2.0 | [`logos-co/eth-lez-atomic-swaps`](https://github.com/logos-co/eth-lez-atomic-swaps) |
 
-macOS Apple Silicon only, public testnet only, unsigned. See
-[Known limits](#known-limits).
+Every 0.3.0 module ships `darwin-arm64`, `linux-amd64`, and `linux-arm64` variants;
+0.2.0 and earlier are `darwin-arm64` only. Public testnet only, unsigned, and only
+the macOS variant has actually been run. See [Known limits](#known-limits).
 
 ## The index is assembled by hand and is NOT on a cron
 
@@ -102,15 +103,37 @@ python3.12 /path/to/logos-modules-release-tool/index.py validate site/index.json
 
 ### One local edit we make, and why
 
-The upstream `swap` and `swap_ui` manifests have no `display_name`, so Basecamp's App
-Manager would render them with an empty name (`package_downloader_lib.cpp` reads the
-snake_case `display_name` off `versions[0].manifest`). We add
-`"display_name": "ETH ↔ LEZ Atomic Swap"` to our copy. This is display-only and is
+Basecamp's App Manager renders a module with no `display_name` as an empty name
+(`package_downloader_lib.cpp` reads the snake_case `display_name` off
+`versions[0].manifest`). Upstream originally shipped both swap modules without it, so
+our copy adds `"display_name": "ETH ↔ LEZ Atomic Swap"`. It is display-only and is
 not one of the five fields re-verified after download (`name`, `version`, `main`,
 `dependencies`, `type`), so installs still verify against the real asset.
 
-**The real fix belongs upstream** in `eth-lez-atomic-swaps/swap-module/metadata.json`
-and `swap-ui/metadata.json`. Drop this edit once that ships.
+**As of 0.3.0 the upstream fix has landed for `swap_ui` only**, so the edit is now
+narrower than it was:
+
+| Entry | `display_name` upstream | In our copy |
+| --- | --- | --- |
+| `swap_ui` 0.3.0 | yes | upstream's, unmodified — no patch |
+| `swap_ui` 0.2.0 | no | patched |
+| `swap` 0.3.0 | **no** | patched |
+| `swap` 0.2.0 | no | patched |
+
+`swap` 0.3.0 missing it is an upstream packaging bug rather than a stale build: the
+release was built from `0bae80ad`, whose `swap-module/metadata.json` does carry
+`display_name`, and the packaging tool dropped it on the way into the bundle. The
+same manifest also reports a stale `"manifestVersion": "0.2.0"` against
+`"version": "0.3.0"` — both are visible in the published `.lgx`'s own
+`manifest.json`, and we copy the stale `manifestVersion` through as published rather
+than correct it. `lez_faucet` is a core module from the same tooling and came out
+right, so this is specific to `swap`.
+
+Because Basecamp only reads `display_name` off `versions[0]`, the patches on the
+0.2.0 entries no longer change anything the App Manager renders; they stay so those
+entries still describe themselves. **Drop the `swap` patch once
+`eth-lez-atomic-swaps` publishes a `swap` build whose manifest carries
+`display_name`.**
 
 ## Deploying
 
@@ -177,15 +200,18 @@ script prints the rollback command if verification fails.
 
 ## Known limits
 
-- **macOS Apple Silicon only.** Every published variant is `darwin-arm64`.
+- **The Linux packages have never been run.** Each 0.3.0 `.lgx` carries `linux-amd64`
+  and `linux-arm64` payloads next to `darwin-arm64`, and those payloads were verified
+  present in the published bundles (`missingVariants: []`). Nothing beyond that is
+  claimed: no Linux `.lgx` from this catalog has been installed or launched under
+  Basecamp. macOS on Apple Silicon is the only platform actually exercised. There are
+  no Windows packages, and 0.2.0 and earlier remain `darwin-arm64` only.
 - **`swap` needs `delivery_module`, which this catalog does not carry.** It resolves
   from the official Logos repository, which Basecamp ships enabled by default
   (`package_downloader_lib.cpp:369-373`). A user who disabled the default repo cannot
   install the swap from here.
 - **Everything is unsigned.** `trustedSigners` is empty, so Basecamp verifies the
   bytes against `rootHash` but cannot attest a publisher.
-- **Faucet 0.3.0 is not installable from here.** It is built but untagged; the catalog
-  offers 0.2.0. The page says so.
 - **The index is not automated.** See
   [above](#the-index-is-assembled-by-hand-and-is-not-on-a-cron).
 
