@@ -19,9 +19,12 @@ repositories and every `.lgx` is downloaded from there.
 | App | Modules | Version | Source repo |
 | --- | --- | --- | --- |
 | LEZ Faucet | `lez_faucet` (core), `lez_faucet_ui` (ui_qml) | 0.3.0, 0.2.0, 0.1.0 | [`logos-co/lez-faucet`](https://github.com/logos-co/lez-faucet) |
-| ETH ↔ LEZ Atomic Swaps | `swap` (core), `swap_ui` (ui_qml) | 0.3.0, 0.2.0 | [`logos-co/eth-lez-atomic-swaps`](https://github.com/logos-co/eth-lez-atomic-swaps) |
+| ETH ↔ LEZ Atomic Swaps | `swap` (core), `swap_ui` (ui_qml) | 0.3.1, 0.3.0, 0.2.0 | [`logos-co/eth-lez-atomic-swaps`](https://github.com/logos-co/eth-lez-atomic-swaps) |
 
-Every 0.3.0 module ships `darwin-arm64`, `linux-amd64`, and `linux-arm64` variants;
+`swap_ui` stays at 0.3.0: 0.3.1 is a `swap`-only re-release (see
+[the local edit](#one-local-edit-we-make-and-why)).
+
+Every 0.3.x module ships `darwin-arm64`, `linux-amd64`, and `linux-arm64` variants;
 0.2.0 and earlier are `darwin-arm64` only. Public testnet only, unsigned, and only
 the macOS variant has actually been run. See [Known limits](#known-limits).
 
@@ -110,30 +113,38 @@ our copy adds `"display_name": "ETH ↔ LEZ Atomic Swap"`. It is display-only an
 not one of the five fields re-verified after download (`name`, `version`, `main`,
 `dependencies`, `type`), so installs still verify against the real asset.
 
-**As of 0.3.0 the upstream fix has landed for `swap_ui` only**, so the edit is now
-narrower than it was:
+**As of `swap` 0.3.1 the upstream fix has landed for both modules**, so the edit no
+longer touches any current release — only the three older entries that were published
+without the field:
 
 | Entry | `display_name` upstream | In our copy |
 | --- | --- | --- |
+| `swap` 0.3.1 | **yes** | upstream's, unmodified — no patch |
+| `swap` 0.3.0 | no | patched |
+| `swap` 0.2.0 | no | patched |
 | `swap_ui` 0.3.0 | yes | upstream's, unmodified — no patch |
 | `swap_ui` 0.2.0 | no | patched |
-| `swap` 0.3.0 | **no** | patched |
-| `swap` 0.2.0 | no | patched |
 
-`swap` 0.3.0 missing it is an upstream packaging bug rather than a stale build: the
-release was built from `0bae80ad`, whose `swap-module/metadata.json` does carry
-`display_name`, and the packaging tool dropped it on the way into the bundle. The
-same manifest also reports a stale `"manifestVersion": "0.2.0"` against
-`"version": "0.3.0"` — both are visible in the published `.lgx`'s own
-`manifest.json`, and we copy the stale `manifestVersion` through as published rather
-than correct it. `lez_faucet` is a core module from the same tooling and came out
-right, so this is specific to `swap`.
+The root cause was never a source defect: `swap-module/metadata.json` has carried
+`display_name` all along. `swap-module/flake.lock` pinned a revision of the packaging
+tooling from before the field existed, so the packager silently dropped it on the way
+into the bundle and stamped the manifest with the tooling's own stale
+`"manifestVersion": "0.2.0"` — which is why `swap` 0.3.0 reports `manifestVersion`
+`0.2.0` against `version` `0.3.0`. The lock is per-repo, which is why `lez_faucet` —
+a core module built by the same tooling, pinned in `lez-faucet` — came out right all
+along. Bumping the swap lock fixed both symptoms at once: `swap` 0.3.1 carries
+`display_name` and `"manifestVersion": "0.3.0"`. Tracked
+as [`eth-lez-atomic-swaps#60`](https://github.com/logos-co/eth-lez-atomic-swaps/issues/60).
+`swap_ui` was not re-released, because its manifest was already correct.
 
-Because Basecamp only reads `display_name` off `versions[0]`, the patches on the
-0.2.0 entries no longer change anything the App Manager renders; they stay so those
-entries still describe themselves. **Drop the `swap` patch once
-`eth-lez-atomic-swaps` publishes a `swap` build whose manifest carries
-`display_name`.**
+Where the field is missing we still copy the manifest through exactly as published —
+stale `manifestVersion` and all — and add only `display_name`. The patch stays on
+those three entries permanently. Basecamp reads `display_name` off `versions[0]`
+only, so now that 0.3.1 is first they change nothing the App Manager renders; they
+persist so each entry still describes itself rather than silently inheriting a name
+from a newer release. **There is no future release that retires them:** a published
+`.lgx` is immutable, and 0.2.0 and 0.3.0 will not be re-cut just to add a display
+name. Treat these three as permanent, not as a TODO.
 
 ## Deploying
 
@@ -200,7 +211,7 @@ script prints the rollback command if verification fails.
 
 ## Known limits
 
-- **The Linux packages have never been run.** Each 0.3.0 `.lgx` carries `linux-amd64`
+- **The Linux packages have never been run.** Each 0.3.x `.lgx` carries `linux-amd64`
   and `linux-arm64` payloads next to `darwin-arm64`, and those payloads were verified
   present in the published bundles (`missingVariants: []`). Nothing beyond that is
   claimed: no Linux `.lgx` from this catalog has been installed or launched under

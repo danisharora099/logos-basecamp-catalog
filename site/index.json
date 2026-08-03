@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "repositoryName": "logos-lez-apps",
-  "generatedAt": "2026-08-03T10:45:52Z",
+  "generatedAt": "2026-08-03T12:50:07Z",
   "packages": [
     {
       "name": "lez_faucet",
@@ -201,6 +201,40 @@
     {
       "name": "swap",
       "versions": [
+        {
+          "url": "https://github.com/logos-co/eth-lez-atomic-swaps/releases/download/swap-v0.3.1/swap-0.3.1.lgx",
+          "rootHash": "0e454964e09f3d65f547c6c21093d275225b6103cf0a33726fc6cb631480fcd0",
+          "manifest": {
+            "author": "Logos",
+            "category": "defi",
+            "dependencies": [
+              "delivery_module"
+            ],
+            "description": "LEZ <> ETH atomic swap backend (wraps the swap-ffi Rust orchestrator)",
+            "display_name": "ETH ↔ LEZ Atomic Swap",
+            "hashes": {
+              "root": "0e454964e09f3d65f547c6c21093d275225b6103cf0a33726fc6cb631480fcd0",
+              "variants": "2975f9cb4f265dd6142ebd6c5bc9bc7ec68d1f42697dcfe6275e750eb6c77e41",
+              "variants/darwin-arm64": "0adaab98fbdd08f94c0584023425664ec2ac0f19dfd7003bbbeebc667afa8c50",
+              "variants/linux-amd64": "d71b49800d177c18b8923c3d804995c83707dc66fdc495552e2d53b4fbdcb8b2",
+              "variants/linux-arm64": "8b7a35f75fcc67bfda325025bb3eb5c01617a35010a835ee4b960be38dec71c8"
+            },
+            "icon": "",
+            "main": {
+              "darwin-arm64": "swap_plugin.dylib",
+              "linux-amd64": "swap_plugin.so",
+              "linux-arm64": "swap_plugin.so"
+            },
+            "manifestVersion": "0.3.0",
+            "name": "swap",
+            "type": "core",
+            "version": "0.3.1"
+          },
+          "releasedAt": "2026-08-03T12:43:10Z",
+          "publisherRef": "swap-v0.3.1",
+          "size": 33216338,
+          "sha256": "75e4e490513fcc32f49d7278369b1ee9c86258620b5473b5ab9259fe9a3d0d35"
+        },
         {
           "url": "https://github.com/logos-co/eth-lez-atomic-swaps/releases/download/swap-v0.3.0/swap-0.3.0.lgx",
           "rootHash": "e30c835df7a7d591a4443c83c3821867b9c95fc3cec695ec8259992c5f23ef4d",
