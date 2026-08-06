@@ -211,12 +211,21 @@ script prints the rollback command if verification fails.
 
 ## Known limits
 
-- **The Linux packages have never been run.** Each 0.3.x `.lgx` carries `linux-amd64`
-  and `linux-arm64` payloads next to `darwin-arm64`, and those payloads were verified
-  present in the published bundles (`missingVariants: []`). Nothing beyond that is
-  claimed: no Linux `.lgx` from this catalog has been installed or launched under
-  Basecamp. macOS on Apple Silicon is the only platform actually exercised. There are
-  no Windows packages, and 0.2.0 and earlier remain `darwin-arm64` only.
+- **No Linux package has run under Basecamp itself.** Each 0.3.x `.lgx` carries
+  `linux-amd64` and `linux-arm64` payloads next to `darwin-arm64`, verified present in
+  the published bundles (`missingVariants: []`). Beyond that the two apps differ, and
+  the difference is worth knowing before you rely on either:
+  - **The faucet is loaded headlessly on every pull request**, on x86-64 and ARM64
+    runners: `lgpm` installs the built package, the right variant is selected, the
+    plugin is `dlopen`ed with every symbol bound (`RTLD_NOW`), and the `logoscore`
+    module host loads `lez_faucet` and reads back its interface. That proves the
+    Linux binaries link and load — not that the app works.
+  - **The swap has no equivalent check.** Its Linux payloads are built and verified
+    present, and nothing more.
+  Neither app's Linux build has been exercised through the Basecamp GUI, and no view
+  has been rendered on Linux. Interactive behaviour has only been confirmed on macOS
+  Apple Silicon. There are no Windows packages, and 0.2.0 and earlier remain
+  `darwin-arm64` only.
 - **`swap` needs `delivery_module`, which this catalog does not carry.** It resolves
   from the official Logos repository, which Basecamp ships enabled by default
   (`package_downloader_lib.cpp:369-373`). A user who disabled the default repo cannot
