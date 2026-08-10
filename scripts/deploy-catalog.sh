@@ -101,10 +101,14 @@ PY
 # is perfectly self-consistent; the only way to catch it is to ask what is live.
 # Without this, deploying an old checkout silently rolls users back to whatever
 # versions it happens to contain.
-say "Drift (is the live index newer than this checkout?)"
-python3 - "$LOCAL_DIR" "$SITE_URL" <<'PY' || die "local index.json is behind the live one — resync before deploying"
+say "Drift (does the live index have anything this checkout lacks?)"
+drift_rc=0
+python3 - "$LOCAL_DIR" "$SITE_URL" <<'PY' || drift_rc=$?
 import json, pathlib, sys, urllib.request
 
+# Exit codes are load-bearing: 0 clean, 3 drift detected, anything else means the
+# check itself broke. Reporting a crash as "you are behind, resync" would train
+# the operator to resync past a real bug.
 site, base = pathlib.Path(sys.argv[1]), sys.argv[2]
 local = json.loads((site / "index.json").read_text())
 
@@ -117,31 +121,52 @@ except Exception as e:
     print(f"  skipped: could not fetch {base}/index.json ({e})")
     sys.exit(0)
 
-def key(v):
-    nums = [int(x) for x in __import__("re").findall(r"\d+", v or "")]
-    return tuple(nums) if nums else (0,)
+def versions(idx):
+    """{package: {version, ...}} — the whole set, not just the newest.
 
-def latest(idx):
+    Comparing only the tip would miss a release deleted from below it, which
+    rsync --delete would then drop from the live catalog. It also sidesteps
+    ordering entirely: no version-comparison function to get wrong on a
+    prerelease or a 0.99.x canary sentinel."""
     out = {}
     for pkg in idx.get("packages", []):
-        vs = [v.get("manifest", {}).get("version") for v in pkg.get("versions", [])]
-        vs = [v for v in vs if v]
-        if vs:
-            out[pkg.get("name")] = max(vs, key=key)
+        name = pkg.get("name")
+        if not name:
+            continue
+        vs = set()
+        for v in pkg.get("versions", []):
+            # Mirror sync-catalog.py's fallback so the two agree on what a
+            # version is.
+            ver = (v.get("manifest") or {}).get("version") or v.get("version")
+            if ver:
+                vs.add(ver)
+        out[name] = vs
     return out
 
-lo, sv = latest(local), latest(served)
-behind = {n: (lo.get(n), v) for n, v in sv.items() if n not in lo or key(v) > key(lo[n])}
-if behind:
-    for n, (have, live) in sorted(behind.items()):
-        print(f"  BEHIND: {n} — local {have or 'absent'}, live {live}")
-    print("\n  The host cron has published versions this checkout does not have.")
-    print("  Deploying now would roll the live catalog backwards. Resync first:\n")
-    print(f"    curl -s {base}/index.json -o {site}/index.json\n")
+lo, sv = versions(local), versions(served)
+
+if served.get("packages") and not any(sv.values()):
+    print("  ERROR: could not read a single version out of the live index.")
+    print("  Refusing to certify a comparison that never happened.")
     sys.exit(1)
 
-print(f"  ok: no package is behind live ({len(sv)} compared)")
+missing = {n: sorted(vs - lo.get(n, set())) for n, vs in sv.items()}
+missing = {n: v for n, v in missing.items() if v}
+if missing:
+    for n, vs in sorted(missing.items()):
+        print(f"  BEHIND: {n} — live has {', '.join(vs)}, this checkout does not")
+    print("\n  Publishing would delete those from the live catalog. Resync first:\n")
+    print(f"    curl -s {base}/index.json -o {site}/index.json\n")
+    sys.exit(3)
+
+n = sum(len(v) for v in sv.values())
+print(f"  ok: checkout carries every live version ({len(sv)} packages / {n} versions)")
 PY
+case "$drift_rc" in
+  0) ;;
+  3) die "local index.json is behind the live one — resync before deploying" ;;
+  *) die "the drift check itself failed (exit $drift_rc) — fix that before deploying" ;;
+esac
 
 ssh -o ConnectTimeout=10 -o BatchMode=yes "$HOST" true 2>/dev/null \
   || die "cannot ssh to '$HOST' (expects a Host entry in ~/.ssh/config)"

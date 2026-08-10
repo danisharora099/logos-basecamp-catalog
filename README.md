@@ -58,9 +58,26 @@ Two things this does *not* cover:
   behind live, but do not rely on being saved.
 - **`index.html` version numbers are hand-written** and go stale on their own.
 
-The sync itself lives on the host at `~/logos-catalog-sync/sync-catalog.py`
-(`*/15` in the `deploy` crontab), which validates, keeps dated backups, and leaves
-the previous file in place on any fetch or validation failure.
+The sync runs on the host from `~/logos-catalog-sync/sync-catalog.py` (`*/15` in the
+`deploy` crontab). `scripts/sync-catalog.py` here is the same file, tracked so it is
+reviewable — **the host copy is what runs**, so a change here reaches production only
+when you copy it over:
+
+```sh
+scp scripts/sync-catalog.py vps:'~/logos-catalog-sync/sync-catalog.py'
+ssh vps 'cd ~/logos-catalog-sync && python3 sync-catalog.py'   # run once, watch it
+```
+
+It refuses to publish in four situations, each leaving the previous file served: any
+upstream index it cannot fetch, a merged result that fails validation (including a
+live `HEAD` of every `.lgx`), a result that would **drop a version already being
+served**, and a result identical to what is already there. Dated pre-change copies go
+to `~/logos-catalog-sync/backups/`, and the log is `~/logos-catalog-sync/sync.log`.
+
+It also filters `0.99.x` sentinel versions. `eth-lez-atomic-swaps`' canary channel
+publishes throwaway builds under that number as real releases, so the upstream index
+lists them and they sort above every genuine version — one reached the tip of that
+index on 2026-08-10 and would have been served to users as the current swap.
 
 ## Layout
 
