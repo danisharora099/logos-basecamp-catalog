@@ -35,7 +35,9 @@ the macOS variant has actually been run. See [Known limits](#known-limits).
 
 ## How a release reaches users
 
-Automatic end to end, in about twenty minutes, for both apps:
+Automatic end to end for both apps. Budget about an hour: the two module builds
+are sequential and have historically run 20–35 minutes each, then the index
+rebuild, then up to 15 minutes of sync latency.
 
 ```text
 bump metadata.json in a PR

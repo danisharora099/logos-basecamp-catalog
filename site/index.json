@@ -1,11 +1,43 @@
 {
   "schemaVersion": 2,
   "repositoryName": "logos-lez-apps",
-  "generatedAt": "2026-08-10T12:21:32Z",
+  "generatedAt": "2026-08-10T13:57:52Z",
   "packages": [
     {
       "name": "lez_faucet",
       "versions": [
+        {
+          "releasedAt": "2026-08-10T12:40:59Z",
+          "publisherRef": "lez_faucet-v0.3.1",
+          "url": "https://github.com/logos-co/lez-faucet/releases/download/lez_faucet-v0.3.1/lez_faucet-0.3.1.lgx",
+          "size": 19545176,
+          "sha256": "d827fef065c5e35411eec3b6fcfc69850aa8f70b6041500d36922ece8a08690d",
+          "rootHash": "251d1fe6e35f74cb80ac58a838bc6f294e5bab3d5aa5a518c8d08d879a9c25f2",
+          "manifest": {
+            "author": "Logos",
+            "category": "blockchain",
+            "dependencies": [],
+            "description": "Request one fixed 150 LEZ testnet drop for a public account you already own. Stateless: no wallet, no key material, no stored files.",
+            "display_name": "LEZ Faucet",
+            "hashes": {
+              "root": "251d1fe6e35f74cb80ac58a838bc6f294e5bab3d5aa5a518c8d08d879a9c25f2",
+              "variants": "83a4ee58dd67e9556ca4ae3e3f45fc4f3c27615e6d540280260f2e6020b1e657",
+              "variants/darwin-arm64": "f3cec302f346b813896068197a8b41e90b904ffde7ef85981dc96a69611dc726",
+              "variants/linux-amd64": "080ad8cf030571a883dfbea5b2ae82851edd9326dff855a05bbab3f9e263dcf1",
+              "variants/linux-arm64": "4d8d55d8ac38eec90be5484b11e87472a5c63636ce8e851ce97904e7890343dc"
+            },
+            "icon": "",
+            "main": {
+              "darwin-arm64": "lez_faucet_plugin.dylib",
+              "linux-amd64": "lez_faucet_plugin.so",
+              "linux-arm64": "lez_faucet_plugin.so"
+            },
+            "manifestVersion": "0.3.0",
+            "name": "lez_faucet",
+            "type": "core",
+            "version": "0.3.1"
+          }
+        },
         {
           "releasedAt": "2026-08-03T09:41:52Z",
           "publisherRef": "lez_faucet-v0.3.0",
@@ -99,6 +131,41 @@
     {
       "name": "lez_faucet_ui",
       "versions": [
+        {
+          "releasedAt": "2026-08-10T13:47:49Z",
+          "publisherRef": "lez_faucet_ui-v0.3.1",
+          "url": "https://github.com/logos-co/lez-faucet/releases/download/lez_faucet_ui-v0.3.1/lez_faucet_ui-0.3.1.lgx",
+          "size": 11464570,
+          "sha256": "374cbe6fcf2f433ff8eb16f9211c4d5da313714c209b317038b986f55352a945",
+          "rootHash": "8300be3f19459901d33432da0146abba92b3ef8d2edcdc6f3ac7708062a7575d",
+          "manifest": {
+            "author": "Logos",
+            "category": "blockchain",
+            "dependencies": [
+              "lez_faucet"
+            ],
+            "description": "Request 150 testnet LEZ for a public LEZ account you already own. The faucet holds no account, asks for no secret, and stores nothing.",
+            "display_name": "LEZ Faucet",
+            "hashes": {
+              "root": "8300be3f19459901d33432da0146abba92b3ef8d2edcdc6f3ac7708062a7575d",
+              "variants": "19fc5c1f6cbde415d812986df43c808d7d9442a197b9695a2bacc3336547d685",
+              "variants/darwin-arm64": "a9298cfba40058113fe76aee99d8b54b40802b3e2dbb33071fcac09733ec1d5a",
+              "variants/linux-amd64": "5a9b044aad7dc2c021a4ed7a42c228c8b058f70fd8cfd178d94a13f2f45ed1de",
+              "variants/linux-arm64": "3171a07d5b8f3f10ac8ba865ab2fc017ebcc3009f1586ef097b1e2e22960880c"
+            },
+            "icon": "",
+            "main": {
+              "darwin-arm64": "lez_faucet_ui_plugin.dylib",
+              "linux-amd64": "lez_faucet_ui_plugin.so",
+              "linux-arm64": "lez_faucet_ui_plugin.so"
+            },
+            "manifestVersion": "0.3.0",
+            "name": "lez_faucet_ui",
+            "type": "ui_qml",
+            "version": "0.3.1",
+            "view": "qml/FaucetView.qml"
+          }
+        },
         {
           "releasedAt": "2026-08-03T09:48:40Z",
           "publisherRef": "lez_faucet_ui-v0.3.0",
