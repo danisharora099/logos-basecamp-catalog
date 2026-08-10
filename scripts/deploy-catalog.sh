@@ -94,6 +94,55 @@ n = sum(len(p.get("versions", [])) for p in idx.get("packages", []))
 print(f"  ok: {len(idx['packages'])} packages / {n} versions, hostnames consistent")
 PY
 
+# The served index.json is NOT owned by this repo — a cron on the host rewrites it
+# in place every 15 minutes from the app repos' rolling release indexes. So this
+# checkout is a mirror that goes stale on its own, and the publish below is
+# `rsync --delete`. Every check above passes on a stale copy, because a stale copy
+# is perfectly self-consistent; the only way to catch it is to ask what is live.
+# Without this, deploying an old checkout silently rolls users back to whatever
+# versions it happens to contain.
+say "Drift (is the live index newer than this checkout?)"
+python3 - "$LOCAL_DIR" "$SITE_URL" <<'PY' || die "local index.json is behind the live one — resync before deploying"
+import json, pathlib, sys, urllib.request
+
+site, base = pathlib.Path(sys.argv[1]), sys.argv[2]
+local = json.loads((site / "index.json").read_text())
+
+try:
+    with urllib.request.urlopen(f"{base}/index.json", timeout=20) as r:
+        served = json.loads(r.read().decode())
+except Exception as e:
+    # Not fatal: a first-ever deploy has nothing live to compare against, and a
+    # network blip should not block a deploy the operator is watching.
+    print(f"  skipped: could not fetch {base}/index.json ({e})")
+    sys.exit(0)
+
+def key(v):
+    nums = [int(x) for x in __import__("re").findall(r"\d+", v or "")]
+    return tuple(nums) if nums else (0,)
+
+def latest(idx):
+    out = {}
+    for pkg in idx.get("packages", []):
+        vs = [v.get("manifest", {}).get("version") for v in pkg.get("versions", [])]
+        vs = [v for v in vs if v]
+        if vs:
+            out[pkg.get("name")] = max(vs, key=key)
+    return out
+
+lo, sv = latest(local), latest(served)
+behind = {n: (lo.get(n), v) for n, v in sv.items() if n not in lo or key(v) > key(lo[n])}
+if behind:
+    for n, (have, live) in sorted(behind.items()):
+        print(f"  BEHIND: {n} — local {have or 'absent'}, live {live}")
+    print("\n  The host cron has published versions this checkout does not have.")
+    print("  Deploying now would roll the live catalog backwards. Resync first:\n")
+    print(f"    curl -s {base}/index.json -o {site}/index.json\n")
+    sys.exit(1)
+
+print(f"  ok: no package is behind live ({len(sv)} compared)")
+PY
+
 ssh -o ConnectTimeout=10 -o BatchMode=yes "$HOST" true 2>/dev/null \
   || die "cannot ssh to '$HOST' (expects a Host entry in ~/.ssh/config)"
 echo "  ok: ssh $HOST"
