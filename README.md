@@ -16,27 +16,70 @@ repositories and every `.lgx` is downloaded from there.
 
 ## What's in the catalog
 
-| App | Modules | Version | Source repo |
-| --- | --- | --- | --- |
-| LEZ Faucet | `lez_faucet` (core), `lez_faucet_ui` (ui_qml) | 0.3.0, 0.2.0, 0.1.0 | [`logos-co/lez-faucet`](https://github.com/logos-co/lez-faucet) |
-| ETH ↔ LEZ Atomic Swaps | `swap` (core), `swap_ui` (ui_qml) | 0.3.1, 0.3.0, 0.2.0 | [`logos-co/eth-lez-atomic-swaps`](https://github.com/logos-co/eth-lez-atomic-swaps) |
+| App | Modules | Source repo |
+| --- | --- | --- |
+| LEZ Faucet | `lez_faucet` (core), `lez_faucet_ui` (ui_qml) | [`logos-co/lez-faucet`](https://github.com/logos-co/lez-faucet) |
+| ETH ↔ LEZ Atomic Swaps | `swap` (core), `swap_ui` (ui_qml) | [`logos-co/eth-lez-atomic-swaps`](https://github.com/logos-co/eth-lez-atomic-swaps) |
 
-`swap_ui` stays at 0.3.0: 0.3.1 is a `swap`-only re-release (see
-[the local edit](#one-local-edit-we-make-and-why)).
+Versions are deliberately not listed here — they change without this file being
+touched, and a third stale copy of a number helps nobody. The live answer:
 
-Every 0.3.x module ships `darwin-arm64`, `linux-amd64`, and `linux-arm64` variants;
+```sh
+curl -s https://logos.substratestudios.xyz/index.json \
+  | jq '[.packages[] | {(.name): [.versions[].manifest.version]}]'
+```
+
+0.3.x and later ship `darwin-arm64`, `linux-amd64`, and `linux-arm64` variants;
 0.2.0 and earlier are `darwin-arm64` only. Public testnet only, unsigned, and only
 the macOS variant has actually been run. See [Known limits](#known-limits).
 
-## The index is assembled by hand and is NOT on a cron
+## How a release reaches users
 
-**`site/index.json` is hand-assembled from the two upstream app repos' own release
-indexes. Nothing polls them.** A new upstream release does *not* appear in this
-catalog automatically — someone has to merge it in here and re-run the deploy. If a
-version is missing from the App Manager, that is the first thing to check.
+Automatic end to end for both apps. Budget about an hour: the two module builds
+are sequential and have historically run 20–35 minutes each, then the index
+rebuild, then up to 15 minutes of sync latency.
 
-This is the one piece of cross-repo coupling in the project, and it is deliberate:
-see [Refreshing the index](#refreshing-the-index-after-an-upstream-release).
+```text
+bump metadata.json in a PR
+  └─ merge to the app repo's default branch
+       └─ release-on-merge.yml publishes <module>-v<version>   (core, then ui)
+            └─ rebuild-index.yml refreshes that repo's rolling `index` release
+                 └─ host cron merges both repos' indexes into the served
+                    index.json, every 15 minutes
+```
+
+**A merge that changes no `metadata.json` version releases nothing**, by design —
+the version *is* the release trigger. That is the first thing to check when a fix
+is on the default branch but not in the App Manager: it probably has no version.
+
+Two things this does *not* cover:
+
+- **`site/index.json` in this repo is a mirror, not the source.** The host cron
+  rewrites the served file in place; git is not in that path. Always resync before
+  deploying — `scripts/deploy-catalog.sh` refuses to publish an index that is
+  behind live, but do not rely on being saved.
+- **`index.html` version numbers are hand-written** and go stale on their own.
+
+The sync runs on the host from `~/logos-catalog-sync/sync-catalog.py` (`*/15` in the
+`deploy` crontab). `scripts/sync-catalog.py` here is the same file, tracked so it is
+reviewable — **the host copy is what runs**, so a change here reaches production only
+when you copy it over:
+
+```sh
+scp scripts/sync-catalog.py vps:'~/logos-catalog-sync/sync-catalog.py'
+ssh vps 'cd ~/logos-catalog-sync && python3 sync-catalog.py'   # run once, watch it
+```
+
+It refuses to publish in four situations, each leaving the previous file served: any
+upstream index it cannot fetch, a merged result that fails validation (including a
+live `HEAD` of every `.lgx`), a result that would **drop a version already being
+served**, and a result identical to what is already there. Dated pre-change copies go
+to `~/logos-catalog-sync/backups/`, and the log is `~/logos-catalog-sync/sync.log`.
+
+It also filters `0.99.x` sentinel versions. `eth-lez-atomic-swaps`' canary channel
+publishes throwaway builds under that number as real releases, so the upstream index
+lists them and they sort above every genuine version — one reached the tip of that
+index on 2026-08-10 and would have been served to users as the current swap.
 
 ## Layout
 
@@ -76,33 +119,48 @@ in `logos-co/logos-modules-release-tool`.
 
 ## Adding an app
 
-1. Publish the app's `.lgx` assets from its own repo (nothing is hosted here).
-2. Copy the `packages[]` entry from that repo's release index into
-   `site/index.json`, keeping every field byte-for-byte as upstream published it —
-   `url`, `rootHash`, `manifest`, `releasedAt`, `size`, `sha256`. Never hand-compute
-   a `rootHash`: it must equal the `.lgx`'s own `manifest.hashes.root` or Basecamp
-   rejects the install.
+1. Publish the app's `.lgx` assets from its own repo (nothing is hosted here), and
+   give that repo a `rebuild-index.yml` so it maintains a rolling `index` release.
+2. Register it on the host, in `~/logos-catalog-sync/sync-catalog.py`:
+
+   ```python
+   ORG_INDEXES = {
+       "https://github.com/logos-co/<repo>/releases/download/index/index.json":
+           ("<core_module>", "<ui_module>"),
+       ...
+   }
+   ```
+
+   From then on its releases are picked up automatically. Do not hand-copy
+   `packages[]` entries — and never hand-compute a `rootHash`, which must equal the
+   `.lgx`'s own `manifest.hashes.root` or Basecamp rejects the install.
 3. Add a plate to `site/index.html` (screenshot in `site/assets/`, 4:3) and update
    the counts in the section heading and the footer.
-4. `./scripts/deploy-catalog.sh`
+4. `./scripts/deploy-catalog.sh` — publishes the page. The index arrives on its own.
 
-### Refreshing the index after an upstream release
+### Checking the index by hand
 
-Merge the `packages` arrays from the two upstream indexes:
+The two upstream sources, both public and unauthenticated:
 
 ```sh
 curl -sSL https://github.com/logos-co/lez-faucet/releases/download/index/index.json
 curl -sSL https://github.com/logos-co/eth-lez-atomic-swaps/releases/download/index/index.json
 ```
 
-Validate with the real tool
+The host cron validates every merge it publishes (shape, `manifest` consistency,
+and a live `HEAD` of each `.lgx` asserting `200` and `Content-Length` == the
+index's `size`). To re-check independently, use the real tool
 ([`logos-co/logos-modules-release-tool`](https://github.com/logos-co/logos-modules-release-tool)),
 which needs Python ≥ 3.10 (macOS system `python3` is 3.9 and crashes on its
 `str | None` annotations):
 
 ```sh
-python3.12 /path/to/logos-modules-release-tool/index.py validate site/index.json
+curl -s https://logos.substratestudios.xyz/index.json -o /tmp/index.json
+python3.12 /path/to/logos-modules-release-tool/index.py validate /tmp/index.json
 ```
+
+Sync activity is in `~/logos-catalog-sync/sync.log` on the host, with dated
+pre-change copies in `~/logos-catalog-sync/backups/`.
 
 ### One local edit we make, and why
 
@@ -112,6 +170,13 @@ Basecamp's App Manager renders a module with no `display_name` as an empty name
 our copy adds `"display_name": "ETH ↔ LEZ Atomic Swap"`. It is display-only and is
 not one of the five fields re-verified after download (`name`, `version`, `main`,
 `dependencies`, `type`), so installs still verify against the real asset.
+
+This is no longer a hand edit: it is `DISPLAY_NAMES` in the host's
+`sync-catalog.py`, applied with `setdefault` on every run, so it is idempotent and
+retires itself as upstream releases carry the field. That matters because when the
+sync first started copying upstream entries through verbatim it silently dropped the
+patch, and the three entries below served a null name for four days before anyone
+noticed. A rule that re-asserts itself every fifteen minutes cannot rot that way.
 
 **As of `swap` 0.3.1 the upstream fix has landed for both modules**, so the edit no
 longer touches any current release — only the three older entries that were published
@@ -140,9 +205,9 @@ as [`eth-lez-atomic-swaps#60`](https://github.com/logos-co/eth-lez-atomic-swaps/
 Where the field is missing we still copy the manifest through exactly as published —
 stale `manifestVersion` and all — and add only `display_name`. The patch stays on
 those three entries permanently. Basecamp reads `display_name` off `versions[0]`
-only, so now that 0.3.1 is first they change nothing the App Manager renders; they
-persist so each entry still describes itself rather than silently inheriting a name
-from a newer release. **There is no future release that retires them:** a published
+only, and every release since 0.3.1 carries the field upstream, so these three
+change nothing the App Manager renders; they persist so each entry still describes
+itself rather than silently inheriting a name from a newer release. **There is no future release that retires them:** a published
 `.lgx` is immutable, and 0.2.0 and 0.3.0 will not be re-cut just to add a display
 name. Treat these three as permanent, not as a TODO.
 
@@ -152,11 +217,24 @@ name. Treat these three as permanent, not as a TODO.
 ./scripts/deploy-catalog.sh
 ```
 
+This publishes the **page**. The index arrives on its own — see
+[How a release reaches users](#how-a-release-reaches-users) — so a deploy is only
+needed for `index.html`, `logos-repo.json`, or assets.
+
 Content changes need no service restart — Caddy serves the content directory from a
 read-only bind mount. The script refuses to publish on a stale hostname, invalid
 JSON, a `rootHash` that disagrees with its manifest, or a `signature` key on an
 unsigned entry; then it rsyncs, and verifies TLS, content types, and served-vs-local
 bytes.
+
+It also refuses to publish an `index.json` that is **behind the live one**. The host
+cron owns the served index, so this checkout goes stale on its own, and the publish
+is `rsync --delete` — every other check passes on a stale copy, because a stale copy
+is perfectly self-consistent. If it stops you, resync and retry:
+
+```sh
+curl -s https://logos.substratestudios.xyz/index.json -o site/index.json
+```
 
 | Variable | Default | Purpose |
 | --- | --- | --- |
@@ -232,8 +310,11 @@ script prints the rollback command if verification fails.
   install the swap from here.
 - **Everything is unsigned.** `trustedSigners` is empty, so Basecamp verifies the
   bytes against `rootHash` but cannot attest a publisher.
-- **The index is not automated.** See
-  [above](#the-index-is-assembled-by-hand-and-is-not-on-a-cron).
+- **A release still starts with a human bumping a version.** Everything after that
+  is automatic ([how a release reaches users](#how-a-release-reaches-users)), but a
+  fix merged without a `metadata.json` bump ships nowhere and reports no error.
+- **The landing page's version numbers are hand-written.** `index.json` is synced;
+  `index.html` is not, so its badges and counts drift until someone edits them.
 
 ## License
 
