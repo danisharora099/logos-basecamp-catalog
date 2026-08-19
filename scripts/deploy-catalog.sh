@@ -92,6 +92,53 @@ if base not in html:
 
 n = sum(len(p.get("versions", [])) for p in idx.get("packages", []))
 print(f"  ok: {len(idx['packages'])} packages / {n} versions, hostnames consistent")
+
+# index.html reads its version numbers from index.json at load time, so the values
+# written into the HTML are only the no-JS / fetch-failed fallback. They are still
+# served to real people, so assert they match the index rather than letting the
+# degraded path rot back into the staleness the hydration was added to fix.
+import re
+WORDS = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight',
+         'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen',
+         'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty']
+
+def vkey(v):                       # mirrors sync-catalog.py's ver_key()
+    nums = re.findall(r"\d+", v or "")
+    return tuple(int(x) for x in nums) if nums else (0,)
+
+def vof(e):
+    return (e.get("manifest") or {}).get("version") or e.get("version") or ""
+
+want = {}
+total = 0
+for pkg in idx.get("packages", []):
+    vs = sorted([e for e in pkg.get("versions", []) if vof(e)],
+                key=lambda e: vkey(vof(e)), reverse=True)
+    if not vs:
+        continue
+    total += len(vs)
+    want[f"ver:{pkg['name']}"] = vof(vs[0])
+    if vs[0].get("releasedAt"):
+        want[f"date:{pkg['name']}"] = str(vs[0]["releasedAt"])[:10]
+    if len(vs) > 1:
+        want[f"prev:{pkg['name']}"] = vof(vs[1])
+    if len(vs) > 2:
+        k = len(vs) - 2
+        want[f"rest:{pkg['name']}"] = WORDS[k] if k < len(WORDS) else str(k)
+want["total"] = str(total)
+
+got = dict(re.findall(r'data-cat="([^"]+)"\s*>([^<]*)<', html))
+if not got:
+    sys.exit("index.html has no data-cat hooks — the version hydration script "
+             "cannot bind to anything (did an edit strip the attributes?)")
+
+bad = [f"{k}: html has {got[k]!r}, index.json says {v!r}"
+       for k, v in want.items() if k in got and got[k].strip() != v]
+if bad:
+    sys.exit("index.html fallback values are stale (they are what no-JS visitors "
+             "see):\n    " + "\n    ".join(bad) +
+             "\n  Fix the literal text inside the data-cat spans in index.html.")
+print(f"  ok: {len(got)} data-cat fallbacks in index.html agree with index.json")
 PY
 
 # The served index.json is NOT owned by this repo — a cron on the host rewrites it

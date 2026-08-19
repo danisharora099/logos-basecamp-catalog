@@ -347,7 +347,7 @@
       <div class="meta">
         <div class="name">
           <h2>LEZ Faucet</h2>
-          <span class="ver">0.3.1</span>
+          <span class="ver" data-cat="ver:lez_faucet">0.3.1</span>
         </div>
         <p class="ident">lez_faucet &middot; blockchain</p>
         <p class="desc">Request one fixed 150 LEZ testnet drop for a public LEZ account you already own. The faucet holds no account, asks for no secret, and stores nothing.</p>
@@ -365,7 +365,7 @@
           </dd>
         </dl>
 
-        <p class="status">Released 2026-08-10 &middot; earlier versions stay installable for rollback, but <span class="mono">0.3.0</span> and older are pinned to the previous testnet and can no longer claim</p>
+        <p class="status">Released <span data-cat="date:lez_faucet">2026-08-10</span> &middot; earlier versions stay installable for rollback, but <span class="mono">0.3.0</span> and older are pinned to the previous testnet and can no longer claim</p>
         <p class="source"><a href="https://github.com/logos-co/lez-faucet">View on GitHub</a></p>
       </div>
     </article>
@@ -379,7 +379,7 @@
       <div class="meta">
         <div class="name">
           <h2>ETH &#8596; LEZ Atomic Swaps</h2>
-          <span class="ver">0.4.2</span>
+          <span class="ver" data-cat="ver:swap">0.4.4</span>
           <span class="poc">proof of concept</span>
         </div>
         <p class="ident">swap &middot; defi</p>
@@ -399,7 +399,7 @@
           </dd>
         </dl>
 
-        <p class="status">Released 2026-08-07 &middot; <span class="mono">0.4.1</span> and six earlier releases stay installable from here. Not for production.</p>
+        <p class="status">Released <span data-cat="date:swap">2026-08-18</span> &middot; <span class="mono" data-cat="prev:swap">0.4.3</span> and <span data-cat="rest:swap">eight</span> earlier releases stay installable from here. Not for production.</p>
         <p class="source"><a href="https://github.com/logos-co/eth-lez-atomic-swaps">View on GitHub</a></p>
       </div>
     </article>
@@ -414,7 +414,7 @@
       <dd><b class="mono">0.2.1</b></dd>
 
       <dt class="kicker">Platform</dt>
-      <dd><b>macOS on Apple Silicon.</b> 0.3.x also ships <span class="mono">linux-amd64</span> and <span class="mono">linux-arm64</span> payloads. The faucet&rsquo;s are installed and loaded headlessly on every pull request; the swap&rsquo;s are only verified present. Neither has run under the Basecamp GUI on Linux. 0.2.0 and earlier are <span class="mono">darwin-arm64</span> only. No Windows.</dd>
+      <dd><b>macOS on Apple Silicon.</b> 0.3.x and later also ship <span class="mono">linux-amd64</span> and <span class="mono">linux-arm64</span> payloads. The faucet&rsquo;s are installed and loaded headlessly on every pull request; the swap&rsquo;s are only verified present. Neither has run under the Basecamp GUI on Linux. 0.2.0 and earlier are <span class="mono">darwin-arm64</span> only. No Windows.</dd>
 
       <dt class="kicker">Network</dt>
       <dd><b>Public testnet only</b> &mdash; no mainnet value moves through either app.</dd>
@@ -434,11 +434,13 @@
 
 <footer class="pagefoot">
   <div class="wrap">
-    <p>2 apps &middot; 4 modules &middot; 23 published versions &middot; descriptor schema v1, index schema v2 &middot; MIT OR Apache-2.0</p>
+    <p>2 apps &middot; 4 modules &middot; <span data-cat="total">27</span> published versions &middot; descriptor schema v1, index schema v2 &middot; MIT OR Apache-2.0</p>
     <p class="note">This index is rebuilt every fifteen minutes from both app repositories' own
       release indexes, so a new upstream release appears here on its own. A release is still
       cut deliberately, not on every commit &mdash; work merged upstream without a version bump
-      will not show up here, by design.</p>
+      will not show up here, by design. The version numbers on this page are read from that
+      same index when the page loads<span data-cat="synced"></span>, so they cannot fall behind
+      what the App Manager offers.</p>
     <span class="links">
       <a href="https://github.com/logos-co/lez-faucet">lez-faucet</a>
       <a href="https://github.com/logos-co/eth-lez-atomic-swaps">eth-lez-atomic-swaps</a>
@@ -501,6 +503,83 @@
     } else {
       done(fallback(text));
     }
+  });
+})();
+
+// Version numbers, release dates and counts are read from index.json at load,
+// not baked into this file. index.json is rewritten in place on the host every
+// fifteen minutes by sync-catalog.py; this page is only republished when a human
+// deploys. Hardcoding the versions here meant the page went stale the moment a
+// release landed without a deploy — which is exactly what happened to swap 0.4.4:
+// the catalog had it within the hour, this page still advertised 0.4.2.
+//
+// Deliberately client-side rather than templated at deploy time (still stale
+// between deploys) or written by the cron (the deploy is `rsync --delete`, so it
+// would clobber the cron's edits — the same bug the index.json sync already had).
+//
+// Progressive enhancement: the served HTML keeps real values, so no-JS and
+// fetch-failure both degrade to today's behaviour rather than to empty spans.
+// deploy-catalog.sh asserts those baked fallbacks still match index.json, so the
+// degraded path cannot drift silently either.
+(function () {
+  var WORDS = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven',
+               'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen',
+               'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty'];
+
+  function word(n) { return n >= 0 && n < WORDS.length ? WORDS[n] : String(n); }
+
+  // Mirrors ver_key() in sync-catalog.py: compare digit runs numerically, so
+  // 0.4.10 sorts above 0.4.9. Never trust the file's ordering.
+  function key(v) {
+    var m = String(v || '').match(/\d+/g);
+    return m ? m.map(Number) : [0];
+  }
+  function newer(a, b) {
+    var x = key(a), y = key(b);
+    for (var i = 0; i < Math.max(x.length, y.length); i++) {
+      var d = (x[i] || 0) - (y[i] || 0);
+      if (d) return d > 0;
+    }
+    return false;
+  }
+  function ver(entry) {
+    return (entry.manifest && entry.manifest.version) || entry.version || '';
+  }
+
+  function set(sel, text) {
+    var el = document.querySelector('[data-cat="' + sel + '"]');
+    if (el && text) el.textContent = text;
+  }
+
+  fetch('index.json', { cache: 'no-store' }).then(function (r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  }).then(function (idx) {
+    var pkgs = (idx && idx.packages) || [];
+    if (!pkgs.length) return;   // never blank the page over an empty index
+    var total = 0;
+
+    pkgs.forEach(function (pkg) {
+      var vs = (pkg.versions || []).slice().filter(function (e) { return ver(e); });
+      if (!vs.length) return;
+      vs.sort(function (a, b) { return newer(ver(a), ver(b)) ? -1 : 1; });
+      total += vs.length;
+
+      set('ver:' + pkg.name, ver(vs[0]));
+      if (vs[0].releasedAt) set('date:' + pkg.name, String(vs[0].releasedAt).slice(0, 10));
+      if (vs.length > 1) set('prev:' + pkg.name, ver(vs[1]));
+      // "<prev> and N earlier releases": N excludes both the latest and <prev>.
+      if (vs.length > 2) set('rest:' + pkg.name, word(vs.length - 2));
+    });
+
+    if (total) set('total', String(total));
+    if (idx.generatedAt) {
+      set('synced', ' (index generated ' +
+          String(idx.generatedAt).slice(0, 10) + ' ' +
+          String(idx.generatedAt).slice(11, 16) + ' UTC)');
+    }
+  }).catch(function () {
+    /* keep the served values — see the note above */
   });
 })();
 </script>

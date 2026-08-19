@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "repositoryName": "logos-lez-apps",
-  "generatedAt": "2026-08-10T13:57:52Z",
+  "generatedAt": "2026-08-18T11:30:02Z",
   "packages": [
     {
       "name": "lez_faucet",
@@ -268,6 +268,74 @@
     {
       "name": "swap",
       "versions": [
+        {
+          "releasedAt": "2026-08-18T10:39:21Z",
+          "publisherRef": "swap-v0.4.4",
+          "url": "https://github.com/logos-co/eth-lez-atomic-swaps/releases/download/swap-v0.4.4/swap-0.4.4.lgx",
+          "size": 28105866,
+          "sha256": "3858f1e00bec51452a096096218a82eb7039c13ba2fdc7c9660e9656937ad860",
+          "rootHash": "ccd29ea621100e7d87c7edd3a20a5f622855d8c7ab6b533e1c470fbc1ad3c18a",
+          "manifest": {
+            "author": "Logos",
+            "category": "defi",
+            "dependencies": [
+              "delivery_module"
+            ],
+            "description": "LEZ <> ETH atomic swap backend (wraps the swap-ffi Rust orchestrator)",
+            "display_name": "ETH ↔ LEZ Atomic Swap",
+            "hashes": {
+              "root": "ccd29ea621100e7d87c7edd3a20a5f622855d8c7ab6b533e1c470fbc1ad3c18a",
+              "variants": "d6b27607f6fed0d84af19e36f1f5ac40b653c8a27e2861409c0bf82cef088728",
+              "variants/darwin-arm64": "256baaa646321e5caeef1ccc307ccbb659edb41529c4c62d1604acb404f3d0c1",
+              "variants/linux-amd64": "371558d3514e6475f8c0c4ae6a31828c2e119c3a2cb68dd8009f3a50da0518d8",
+              "variants/linux-arm64": "bc2d04491a286819410a535a62a395f1391224ca860b6042142b9be14df3130f"
+            },
+            "icon": "",
+            "main": {
+              "darwin-arm64": "swap_plugin.dylib",
+              "linux-amd64": "swap_plugin.so",
+              "linux-arm64": "swap_plugin.so"
+            },
+            "manifestVersion": "0.3.0",
+            "name": "swap",
+            "type": "core",
+            "version": "0.4.4"
+          }
+        },
+        {
+          "releasedAt": "2026-08-12T23:40:56Z",
+          "publisherRef": "swap-v0.4.3",
+          "url": "https://github.com/logos-co/eth-lez-atomic-swaps/releases/download/swap-v0.4.3/swap-0.4.3.lgx",
+          "size": 28106129,
+          "sha256": "4437d1febe2147441a7a935aca61eeec9fa74a02166ab90c6e81dbc96196cac0",
+          "rootHash": "8d93b36b32d655516920c3082bfae193a52d6ff8b8cf085aa7d6465aadf03c57",
+          "manifest": {
+            "author": "Logos",
+            "category": "defi",
+            "dependencies": [
+              "delivery_module"
+            ],
+            "description": "LEZ <> ETH atomic swap backend (wraps the swap-ffi Rust orchestrator)",
+            "display_name": "ETH ↔ LEZ Atomic Swap",
+            "hashes": {
+              "root": "8d93b36b32d655516920c3082bfae193a52d6ff8b8cf085aa7d6465aadf03c57",
+              "variants": "8db0c9328a2e5b7560cbd2d00af3d03355966340cc183b22635fc7cf92f5487b",
+              "variants/darwin-arm64": "f9f1adc417986822ecd3d69bd3ea5e7dc7ef657ac34a27ad9e58b605c14be07f",
+              "variants/linux-amd64": "52c53b5828aa023c0c9b9c41a2a0589b0c886143d30b4c8cf2b28bbd86739e87",
+              "variants/linux-arm64": "f60801e1ee82b8bab0a344855377c7a93b53caa495ee22d6938443e0051b504d"
+            },
+            "icon": "",
+            "main": {
+              "darwin-arm64": "swap_plugin.dylib",
+              "linux-amd64": "swap_plugin.so",
+              "linux-arm64": "swap_plugin.so"
+            },
+            "manifestVersion": "0.3.0",
+            "name": "swap",
+            "type": "core",
+            "version": "0.4.3"
+          }
+        },
         {
           "releasedAt": "2026-08-07T06:35:11Z",
           "publisherRef": "swap-v0.4.2",
@@ -541,6 +609,76 @@
     {
       "name": "swap_ui",
       "versions": [
+        {
+          "releasedAt": "2026-08-18T11:13:43Z",
+          "publisherRef": "swap_ui-v0.4.4",
+          "url": "https://github.com/logos-co/eth-lez-atomic-swaps/releases/download/swap_ui-v0.4.4/swap_ui-0.4.4.lgx",
+          "size": 12220459,
+          "sha256": "332f7441d400869227c3f3c6c937288175028a870bf4eccf584efbcbd5d39858",
+          "rootHash": "9b6cc4fa1aa8fee9165799b4bd9855e17aa8118ee58ae7e5a3393438ed278186",
+          "manifest": {
+            "author": "Logos",
+            "category": "defi",
+            "dependencies": [
+              "swap"
+            ],
+            "description": "LEZ <> ETH atomic swap UI (Basecamp)",
+            "display_name": "ETH ↔ LEZ Atomic Swap",
+            "hashes": {
+              "root": "9b6cc4fa1aa8fee9165799b4bd9855e17aa8118ee58ae7e5a3393438ed278186",
+              "variants": "ae0f2fdaeb12c06b7f4a889394dcdded372f36ab940d626dd0a14db73e984b83",
+              "variants/darwin-arm64": "cac5ab88dc95f622f67d34bbfbe29c3fd4c976ac7cb36e1286d7e7bb1b95921a",
+              "variants/linux-amd64": "a6e880ace855dd8f92a1f88b303c8bb8eb629afe9959184d3023ce79420a2a89",
+              "variants/linux-arm64": "c1f68aa4848890542d9a98f9145f05457f3b7a09cfe5161fc1f5f7726843d955"
+            },
+            "icon": "",
+            "main": {
+              "darwin-arm64": "swap_ui_plugin.dylib",
+              "linux-amd64": "swap_ui_plugin.so",
+              "linux-arm64": "swap_ui_plugin.so"
+            },
+            "manifestVersion": "0.3.0",
+            "name": "swap_ui",
+            "type": "ui_qml",
+            "version": "0.4.4",
+            "view": "qml/Main.qml"
+          }
+        },
+        {
+          "releasedAt": "2026-08-13T00:12:13Z",
+          "publisherRef": "swap_ui-v0.4.3",
+          "url": "https://github.com/logos-co/eth-lez-atomic-swaps/releases/download/swap_ui-v0.4.3/swap_ui-0.4.3.lgx",
+          "size": 12150420,
+          "sha256": "d998eabaa15f646dfa55a164fddc5a9154ef27f7ee2e43c2389ce28af5532336",
+          "rootHash": "974008467c81de2c4f6c88d34b2209eb4d0e4acfb4194936bc1de77f1457fcba",
+          "manifest": {
+            "author": "Logos",
+            "category": "defi",
+            "dependencies": [
+              "swap"
+            ],
+            "description": "LEZ <> ETH atomic swap UI (Basecamp)",
+            "display_name": "ETH ↔ LEZ Atomic Swap",
+            "hashes": {
+              "root": "974008467c81de2c4f6c88d34b2209eb4d0e4acfb4194936bc1de77f1457fcba",
+              "variants": "572178ac03c72be7f0d4e7f4629628893fbde60587b6bd2af9ced897f6f0e4ef",
+              "variants/darwin-arm64": "831843c237ce9eb15ce093a96476659ba37730f3f04cb162d175b29ef8df38bb",
+              "variants/linux-amd64": "e1c081bd666bbb6c9447a90a84d901f3526eccabab6a003f150aaa60d6d9651f",
+              "variants/linux-arm64": "009c4842d1df84cb3148fadf63ae7f79acc0dbf87302ba114dab57c05e0aeb57"
+            },
+            "icon": "",
+            "main": {
+              "darwin-arm64": "swap_ui_plugin.dylib",
+              "linux-amd64": "swap_ui_plugin.so",
+              "linux-arm64": "swap_ui_plugin.so"
+            },
+            "manifestVersion": "0.3.0",
+            "name": "swap_ui",
+            "type": "ui_qml",
+            "version": "0.4.3",
+            "view": "qml/Main.qml"
+          }
+        },
         {
           "releasedAt": "2026-08-07T07:16:41Z",
           "publisherRef": "swap_ui-v0.4.2",
